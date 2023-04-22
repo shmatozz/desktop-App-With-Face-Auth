@@ -1,5 +1,5 @@
 import psycopg2
-from PySide6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QWidget
+from PyQt6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QWidget
 from ui.signUpMenu import UiSignUp
 from windows.styles import *
 

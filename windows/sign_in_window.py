@@ -1,8 +1,8 @@
 import psycopg2
-from PySide6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QWidget
+from PyQt6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QWidget
 from ui.signInMenu import UiSignIn
-from ui.signUpMenu import UiSignUp
 from windows.sign_up_window import SignUp
+from windows.main_window import MainWindow
 from windows.styles import *
 
 
@@ -35,10 +35,7 @@ class SignIn(QMainWindow):
         if len(login) != 0 and len(password) != 0:
             try:
                 # connect to database
-                connection = psycopg2.connect(host="127.0.0.1",
-                                              user="postgres",
-                                              password="1234567890",
-                                              database="app_users")
+                connection = self.connect_to_db()
 
                 with connection.cursor() as cursor:
                     cursor.execute(f"SELECT password from users where login = '{login}'")
@@ -52,8 +49,10 @@ class SignIn(QMainWindow):
                     elif user_password[0] == password:
                         self.ui.helloTitle.setText("PASSED!")
                         self.ui.helloTitle.setStyleSheet("color: rgb(120, 183, 140);")
-
-                        # TODO implement opening app main window
+                        self.close()
+                        global main
+                        main = MainWindow()
+                        main.show()
                     # if database password != input password
                     else:
                         self.ui.helloTitle.setText("Wrong password!")
@@ -61,7 +60,7 @@ class SignIn(QMainWindow):
                 # close connection to database
                 connection.close()
             except psycopg2.Error as _ex:
-                print("[INFO] Working error!")
+                print("[INFO] database working error")
 
     def openSignUp(self):
         self.close()
@@ -72,3 +71,10 @@ class SignIn(QMainWindow):
         self.ui.login.setStyleSheet(DEFAULT_LINE_STYLE)
         self.ui.password.setStyleSheet(DEFAULT_LINE_STYLE)
         self.ui.helloTitle.setStyleSheet(DEFAULT_TITLE_STYLE)
+
+    @staticmethod
+    def connect_to_db():
+        return psycopg2.connect(host="127.0.0.1",
+                                user="postgres",
+                                password="1234567890",
+                                database="app_users")
