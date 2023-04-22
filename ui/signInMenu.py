@@ -89,7 +89,7 @@ class UiSignIn(object):
         font.setPointSize(9)
         self.faceAuthNote.setFont(font)
         self.faceAuthNote.setObjectName("faceAuthNote")
-        self.verticalLayout.addWidget(self.faceAuthNote)
+        self.verticalLayout.addWidget(self.faceAuthNote, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
         self.SignInButton = QtWidgets.QPushButton(parent=self.Buttons)
         self.SignInButton.setEnabled(True)
         self.SignInButton.setMinimumSize(QtCore.QSize(250, 50))
@@ -195,7 +195,7 @@ class UiSignIn(object):
         self.login.setPlaceholderText(_translate("MainWindow", "login"))
         self.password.setPlaceholderText(_translate("MainWindow", "password"))
         self.faceAuthNote.setText(_translate("MainWindow",
-                                             "<html><head/><body><p>You can sign in without password, if you enable face auntification</p></body></html>"))
+                                             "You can sign in without password, if you enable face auntification"))
         self.SignInButton.setText(_translate("MainWindow", "Sign In"))
         self.account.setText(_translate("MainWindow", "<html><head/><body><p>Don\'t have account?</p></body></html>"))
         self.SignUpButton.setText(_translate("MainWindow", "Sign Up"))

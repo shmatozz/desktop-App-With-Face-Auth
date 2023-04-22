@@ -18,8 +18,8 @@ class UiMainWindow(object):
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.centralwidget)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.slide_menu_cont = QtWidgets.QFrame(parent=self.centralwidget)
-        self.slide_menu_cont.setMinimumSize(QtCore.QSize(200, 800))
-        self.slide_menu_cont.setMaximumSize(QtCore.QSize(200, 800))
+        self.slide_menu_cont.setMinimumSize(QtCore.QSize(0, 800))
+        self.slide_menu_cont.setMaximumSize(QtCore.QSize(0, 800))
         self.slide_menu_cont.setStyleSheet("")
         self.slide_menu_cont.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.slide_menu_cont.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
@@ -75,7 +75,7 @@ class UiMainWindow(object):
         self.verticalLayout_4.setSpacing(20)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.profile = QtWidgets.QPushButton(parent=self.frame)
-        self.profile.setMinimumSize(QtCore.QSize(0, 50))
+        self.profile.setMinimumSize(QtCore.QSize(0, 40))
         self.profile.setStyleSheet("QPushButton {\n"
                                    "    font: 75 14pt \"Bahnschrift\";\n"
                                    "    color: rgb(255, 255, 255);\n"
@@ -102,7 +102,7 @@ class UiMainWindow(object):
         self.profile.setObjectName("profile")
         self.verticalLayout_4.addWidget(self.profile)
         self.settings = QtWidgets.QPushButton(parent=self.frame)
-        self.settings.setMinimumSize(QtCore.QSize(0, 50))
+        self.settings.setMinimumSize(QtCore.QSize(0, 40))
         self.settings.setStyleSheet("QPushButton {\n"
                                     "    font: 75 14pt \"Bahnschrift\";\n"
                                     "    color: rgb(255, 255, 255);\n"
@@ -129,7 +129,7 @@ class UiMainWindow(object):
         self.settings.setObjectName("settings")
         self.verticalLayout_4.addWidget(self.settings)
         self.about = QtWidgets.QPushButton(parent=self.frame)
-        self.about.setMinimumSize(QtCore.QSize(0, 50))
+        self.about.setMinimumSize(QtCore.QSize(0, 40))
         self.about.setStyleSheet("QPushButton {\n"
                                  "    font: 75 14pt \"Bahnschrift\";\n"
                                  "    color: rgb(120, 183, 140);\n"
@@ -197,8 +197,8 @@ class UiMainWindow(object):
         self.menu_button.setObjectName("menu_button")
         self.button = QtWidgets.QPushButton(parent=self.menu_button)
         self.button.setGeometry(QtCore.QRect(0, 0, 50, 50))
-        self.button.setMinimumSize(QtCore.QSize(50, 50))
-        self.button.setMaximumSize(QtCore.QSize(50, 50))
+        self.button.setMinimumSize(QtCore.QSize(40, 40))
+        self.button.setMaximumSize(QtCore.QSize(40, 40))
         self.button.setStyleSheet("QPushButton {\n"
                                   "    font: 75 14pt \"Bahnschrift\";\n"
                                   "    color: rgb(120, 183, 140);\n"
@@ -218,7 +218,7 @@ class UiMainWindow(object):
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/icons/icons/menu.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.button.setIcon(icon)
-        self.button.setIconSize(QtCore.QSize(40, 40))
+        self.button.setIconSize(QtCore.QSize(30, 30))
         self.button.setObjectName("button")
         self.horizontalLayout_2.addWidget(self.menu_button, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
         self.hello_title = QtWidgets.QLabel(parent=self.header)

@@ -84,7 +84,7 @@
          <string notr="true">color: rgb(0, 0, 0);
 background-color: rgb(255, 255, 255);
 border-radius: 15px;                     /* &lt;----  20px  */ 
-border: 2px solid #094065;
+border: 2px solid #000000;
 padding-left: 20px
 </string>
         </property>
@@ -135,7 +135,7 @@ padding-left: 20px
          <string notr="true">color: rgb(0, 0, 0);
 background-color: rgb(255, 255, 255);
 border-radius: 15px;                     /* &lt;----  20px  */ 
-border: 2px solid #094065;
+border: 2px solid #000000;
 padding-left: 20px
 </string>
         </property>
@@ -177,7 +177,7 @@ padding-left: 20px
          <enum>QFrame::Raised</enum>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
+         <item alignment="Qt::AlignHCenter">
           <widget class="QLabel" name="faceAuthNote">
            <property name="enabled">
             <bool>false</bool>

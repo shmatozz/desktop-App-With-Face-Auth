@@ -98,7 +98,7 @@ class UiSignUp(object):
         self.verticalLayout_2.setSpacing(0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.RegistrationTitle = QtWidgets.QLabel(parent=self.frame)
-        self.RegistrationTitle.setMaximumSize(QtCore.QSize(200, 50))
+        self.RegistrationTitle.setMaximumSize(QtCore.QSize(350, 50))
         font = QtGui.QFont()
         font.setFamily("Bahnschrift")
         font.setPointSize(21)
