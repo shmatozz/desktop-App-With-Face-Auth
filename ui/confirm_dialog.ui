@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>200</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>400</width>
+    <height>200</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>400</width>
+    <height>200</height>
+   </size>
+  </property>
+  <property name="contextMenuPolicy">
+   <enum>Qt::NoContextMenu</enum>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="sizeGripEnabled">
+   <bool>false</bool>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <widget class="QFrame" name="dialog_frame">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item alignment="Qt::AlignHCenter">
+       <widget class="QLabel" name="question_laber">
+        <property name="font">
+         <font>
+          <family>Bahnschrift</family>
+          <pointsize>24</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Are you sure?</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="frame_2">
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <property name="spacing">
+          <number>40</number>
+         </property>
+         <item>
+          <widget class="QPushButton" name="ok_button">
+           <property name="maximumSize">
+            <size>
+             <width>200</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+	font: 75 14pt &quot;Bahnschrift&quot;;
+	color: rgb(255, 255, 255);
+	background-color: rgb(120, 183, 140);
+	border-radius: 10px;
+	border: 2px solid #094065;
+}
+
+QPushButton:hover{
+	font: 75 14pt &quot;Bahnschrift&quot;;
+	color: rgb(255, 255, 255);
+	background-color: rgb(100, 183, 140);
+	border-radius: 10px;
+	border: 2px solid #094065;
+}
+
+QPushButton:pressed{
+	font: 75 14pt &quot;Bahnschrift&quot;;
+	color: rgb(255, 255, 255);
+	background-color: rgb(88, 162, 123);
+	border-radius: 10px;
+	border: 2px solid #094065;
+}</string>
+           </property>
+           <property name="text">
+            <string>OK</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="cancel_button">
+           <property name="maximumSize">
+            <size>
+             <width>200</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+	font: 75 14pt &quot;Bahnschrift&quot;;
+	color: rgb(255, 0, 0);
+	background-color: rgb(255, 255, 255);
+	border-radius: 10px;                     /* &lt;----  20px  */ 
+	border: 2px solid #094065;
+}
+
+QPushButton:hover{
+	font: 75 14pt &quot;Bahnschrift&quot;;
+	color: rgb(255, 255, 255);
+	background-color: rgb(234, 0, 0);
+	border-radius: 10px;                     /* &lt;----  20px  */ 
+	border: 2px solid #094065;
+}
+
+QPushButton:pressed{
+	font: 75 14pt &quot;Bahnschrift&quot;;
+	color: rgb(255, 255, 255);
+	background-color:rgb(182, 0, 0);
+	border-radius: 10px;                     /* &lt;----  20px  */ 
+	border: 2px solid #094065;
+}</string>
+           </property>
+           <property name="text">
+            <string>Cancel</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
