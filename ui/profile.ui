@@ -82,7 +82,7 @@
            <number>11</number>
           </property>
           <item>
-           <widget class="QLabel" name="photo_2">
+           <widget class="QLabel" name="user_photo">
             <property name="minimumSize">
              <size>
               <width>200</width>
@@ -108,6 +108,62 @@ border: 2px solid #000000;</string>
             <property name="scaledContents">
              <bool>true</bool>
             </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="exit_frame">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_11">
+             <item>
+              <widget class="QPushButton" name="exit_button">
+               <property name="maximumSize">
+                <size>
+                 <width>100</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton {
+	font: 75 14pt &quot;Bahnschrift&quot;;
+	color: rgb(255, 0, 0);
+	background-color: rgb(255, 255, 255);
+	border-radius: 10px;                     /* &lt;----  20px  */ 
+	border: 2px solid #094065;
+}
+
+QPushButton:hover{
+	font: 75 14pt &quot;Bahnschrift&quot;;
+	color: rgb(255, 255, 255);
+	background-color: rgb(234, 0, 0);
+	border-radius: 10px;                     /* &lt;----  20px  */ 
+	border: 2px solid #094065;
+}
+
+QPushButton:pressed{
+	font: 75 14pt &quot;Bahnschrift&quot;;
+	color: rgb(255, 255, 255);
+	background-color:rgb(182, 0, 0);
+	border-radius: 10px;                     /* &lt;----  20px  */ 
+	border: 2px solid #094065;
+}</string>
+               </property>
+               <property name="text">
+                <string>Exit</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
           <item>
@@ -175,7 +231,7 @@ border: 2px solid #000000;</string>
 	font: 75 14pt &quot;Bahnschrift&quot;;
 	color: rgb(120, 183, 140);
 	background-color: rgb(255, 255, 255);
-	border-radius: 20px;                     /* &lt;----  20px  */ 
+	border-radius: 10px;
 	border: 2px solid #094065;
 }
 
@@ -183,7 +239,7 @@ QPushButton:hover{
 	font: 75 14pt &quot;Bahnschrift&quot;;
 	color: rgb(255, 255, 255);
 	background-color: rgb(100, 183, 140);
-	border-radius: 20px;                     /* &lt;----  20px  */ 
+	border-radius: 10px;
 	border: 2px solid #094065;
 }
 
@@ -191,7 +247,7 @@ QPushButton:pressed{
 	font: 75 14pt &quot;Bahnschrift&quot;;
 	color: rgb(255, 255, 255);
 	background-color: rgb(88, 162, 123);
-	border-radius: 20px;                     /* &lt;----  20px  */ 
+	border-radius: 10px;
 	border: 2px solid #094065;
 }</string>
             </property>
@@ -580,6 +636,9 @@ padding-left: 20px
             <property name="maxLength">
              <number>20</number>
             </property>
+            <property name="echoMode">
+             <enum>QLineEdit::PasswordEchoOnEdit</enum>
+            </property>
             <property name="placeholderText">
              <string>login</string>
             </property>
@@ -671,6 +730,9 @@ padding-left: 20px
             <property name="maxLength">
              <number>20</number>
             </property>
+            <property name="echoMode">
+             <enum>QLineEdit::Password</enum>
+            </property>
             <property name="placeholderText">
              <string>password</string>
             </property>
@@ -680,7 +742,7 @@ padding-left: 20px
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="change_button">
+           <widget class="QPushButton" name="vis_button">
             <property name="maximumSize">
              <size>
               <width>30</width>
@@ -702,7 +764,7 @@ padding-left: 20px
             </property>
             <property name="icon">
              <iconset resource="icons.qrc">
-              <normaloff>:/icons/icons/view.png</normaloff>:/icons/icons/view.png</iconset>
+              <normaloff>:/icons/icons/view_off.png</normaloff>:/icons/icons/view_off.png</iconset>
             </property>
            </widget>
           </item>
@@ -789,6 +851,9 @@ padding-left: 20px
             <property name="maxLength">
              <number>20</number>
             </property>
+            <property name="echoMode">
+             <enum>QLineEdit::Password</enum>
+            </property>
             <property name="placeholderText">
              <string>repeat password</string>
             </property>
@@ -852,7 +917,7 @@ padding-left: 20px
 	font: 75 14pt &quot;Bahnschrift&quot;;
 	color: rgb(255, 255, 255);
 	background-color: rgb(120, 183, 140);
-	border-radius: 20px;                     /* &lt;----  20px  */ 
+	border-radius: 10px;                     /* &lt;----  20px  */ 
 	border: 2px solid #094065;
 }
 
@@ -860,7 +925,7 @@ QPushButton:hover{
 	font: 75 14pt &quot;Bahnschrift&quot;;
 	color: rgb(255, 255, 255);
 	background-color: rgb(100, 183, 140);
-	border-radius: 20px;                     /* &lt;----  20px  */ 
+	border-radius: 10px;                     /* &lt;----  20px  */ 
 	border: 2px solid #094065;
 }
 
@@ -868,7 +933,7 @@ QPushButton:pressed{
 	font: 75 14pt &quot;Bahnschrift&quot;;
 	color: rgb(255, 255, 255);
 	background-color: rgb(88, 162, 123);
-	border-radius: 20px;                     /* &lt;----  20px  */ 
+	border-radius: 10px;                     /* &lt;----  20px  */ 
 	border: 2px solid #094065;
 }</string>
             </property>
@@ -908,7 +973,7 @@ QPushButton:pressed{
 	font: 75 14pt &quot;Bahnschrift&quot;;
 	color: rgb(255, 255, 255);
 	background-color: rgb(120, 183, 140);
-	border-radius: 20px;                     /* &lt;----  20px  */ 
+	border-radius: 10px;
 	border: 2px solid #094065;
 }
 
@@ -916,7 +981,7 @@ QPushButton:hover{
 	font: 75 14pt &quot;Bahnschrift&quot;;
 	color: rgb(255, 255, 255);
 	background-color: rgb(100, 183, 140);
-	border-radius: 20px;                     /* &lt;----  20px  */ 
+	border-radius: 10px;
 	border: 2px solid #094065;
 }
 
@@ -924,7 +989,7 @@ QPushButton:pressed{
 	font: 75 14pt &quot;Bahnschrift&quot;;
 	color: rgb(255, 255, 255);
 	background-color: rgb(88, 162, 123);
-	border-radius: 20px;                     /* &lt;----  20px  */ 
+	border-radius: 10px;
 	border: 2px solid #094065;
 }</string>
             </property>

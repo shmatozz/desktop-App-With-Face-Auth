@@ -36,16 +36,51 @@ class UiProfile(object):
         self.verticalLayout_3.setContentsMargins(11, 15, 11, 11)
         self.verticalLayout_3.setSpacing(7)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
-        self.photo_2 = QtWidgets.QLabel(parent=self.photo)
-        self.photo_2.setMinimumSize(QtCore.QSize(200, 200))
-        self.photo_2.setMaximumSize(QtCore.QSize(200, 200))
-        self.photo_2.setStyleSheet("border-radius: 20px;  \n"
-                                   "border: 2px solid #000000;")
-        self.photo_2.setText("")
-        self.photo_2.setPixmap(QtGui.QPixmap(":/icons/icons/person.png"))
-        self.photo_2.setScaledContents(True)
-        self.photo_2.setObjectName("photo_2")
-        self.verticalLayout_3.addWidget(self.photo_2)
+        self.user_photo = QtWidgets.QLabel(parent=self.photo)
+        self.user_photo.setMinimumSize(QtCore.QSize(200, 200))
+        self.user_photo.setMaximumSize(QtCore.QSize(200, 200))
+        self.user_photo.setStyleSheet("border-radius: 20px;  \n"
+                                      "border: 2px solid #000000;")
+        self.user_photo.setText("")
+        self.user_photo.setPixmap(QtGui.QPixmap(":/icons/icons/person.png"))
+        self.user_photo.setScaledContents(True)
+        self.user_photo.setObjectName("user_photo")
+        self.verticalLayout_3.addWidget(self.user_photo)
+        self.exit_frame = QtWidgets.QFrame(parent=self.photo)
+        self.exit_frame.setMinimumSize(QtCore.QSize(0, 80))
+        self.exit_frame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.exit_frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.exit_frame.setObjectName("exit_frame")
+        self.horizontalLayout_11 = QtWidgets.QHBoxLayout(self.exit_frame)
+        self.horizontalLayout_11.setObjectName("horizontalLayout_11")
+        self.exit_button = QtWidgets.QPushButton(parent=self.exit_frame)
+        self.exit_button.setMaximumSize(QtCore.QSize(100, 40))
+        self.exit_button.setStyleSheet("QPushButton {\n"
+                                       "    font: 75 14pt \"Bahnschrift\";\n"
+                                       "    color: rgb(255, 0, 0);\n"
+                                       "    background-color: rgb(255, 255, 255);\n"
+                                       "    border-radius: 10px;                     /* <----  20px  */ \n"
+                                       "    border: 2px solid #094065;\n"
+                                       "}\n"
+                                       "\n"
+                                       "QPushButton:hover{\n"
+                                       "    font: 75 14pt \"Bahnschrift\";\n"
+                                       "    color: rgb(255, 255, 255);\n"
+                                       "    background-color: rgb(234, 0, 0);\n"
+                                       "    border-radius: 10px;                     /* <----  20px  */ \n"
+                                       "    border: 2px solid #094065;\n"
+                                       "}\n"
+                                       "\n"
+                                       "QPushButton:pressed{\n"
+                                       "    font: 75 14pt \"Bahnschrift\";\n"
+                                       "    color: rgb(255, 255, 255);\n"
+                                       "    background-color:rgb(182, 0, 0);\n"
+                                       "    border-radius: 10px;                     /* <----  20px  */ \n"
+                                       "    border: 2px solid #094065;\n"
+                                       "}")
+        self.exit_button.setObjectName("exit_button")
+        self.horizontalLayout_11.addWidget(self.exit_button)
+        self.verticalLayout_3.addWidget(self.exit_frame)
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum,
                                            QtWidgets.QSizePolicy.Policy.Expanding)
         self.verticalLayout_3.addItem(spacerItem)
@@ -66,7 +101,7 @@ class UiProfile(object):
                                 "    font: 75 14pt \"Bahnschrift\";\n"
                                 "    color: rgb(120, 183, 140);\n"
                                 "    background-color: rgb(255, 255, 255);\n"
-                                "    border-radius: 20px;                     /* <----  20px  */ \n"
+                                "    border-radius: 10px;\n"
                                 "    border: 2px solid #094065;\n"
                                 "}\n"
                                 "\n"
@@ -74,7 +109,7 @@ class UiProfile(object):
                                 "    font: 75 14pt \"Bahnschrift\";\n"
                                 "    color: rgb(255, 255, 255);\n"
                                 "    background-color: rgb(100, 183, 140);\n"
-                                "    border-radius: 20px;                     /* <----  20px  */ \n"
+                                "    border-radius: 10px;\n"
                                 "    border: 2px solid #094065;\n"
                                 "}\n"
                                 "\n"
@@ -82,7 +117,7 @@ class UiProfile(object):
                                 "    font: 75 14pt \"Bahnschrift\";\n"
                                 "    color: rgb(255, 255, 255);\n"
                                 "    background-color: rgb(88, 162, 123);\n"
-                                "    border-radius: 20px;                     /* <----  20px  */ \n"
+                                "    border-radius: 10px;\n"
                                 "    border: 2px solid #094065;\n"
                                 "}")
         self.back.setObjectName("back")
@@ -276,25 +311,26 @@ class UiProfile(object):
                                          "padding-left: 20px\n"
                                          "")
         self.password_line.setMaxLength(20)
+        self.password_line.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
         self.password_line.setClearButtonEnabled(True)
         self.password_line.setObjectName("password_line")
         self.horizontalLayout_7.addWidget(self.password_line)
-        self.change_button = QtWidgets.QPushButton(parent=self.password_frame)
-        self.change_button.setMaximumSize(QtCore.QSize(30, 30))
-        self.change_button.setStyleSheet("QPushButton {\n"
-                                         "    font: 75 14pt \"Bahnschrift\";\n"
-                                         "    color: rgb(120, 183, 140);\n"
-                                         "    background-color: rgb(255, 255, 255);\n"
-                                         "    border-radius: 10px;                     /* <----  20px  */ \n"
-                                         "    border: 1px solid #000000;\n"
-                                         "}\n"
-                                         "")
-        self.change_button.setText("")
+        self.vis_button = QtWidgets.QPushButton(parent=self.password_frame)
+        self.vis_button.setMaximumSize(QtCore.QSize(25, 25))
+        self.vis_button.setStyleSheet("QPushButton {\n"
+                                      "    font: 75 14pt \"Bahnschrift\";\n"
+                                      "    color: rgb(120, 183, 140);\n"
+                                      "    background-color: rgb(255, 255, 255);\n"
+                                      "    border-radius: 10px;                     /* <----  20px  */ \n"
+                                      "    border: 1px solid #000000;\n"
+                                      "}\n"
+                                      "")
+        self.vis_button.setText("")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/icons/icons/view.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.change_button.setIcon(icon)
-        self.change_button.setObjectName("change_button")
-        self.horizontalLayout_7.addWidget(self.change_button)
+        icon.addPixmap(QtGui.QPixmap(":/icons/icons/view_off.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.vis_button.setIcon(icon)
+        self.vis_button.setObjectName("vis_button")
+        self.horizontalLayout_7.addWidget(self.vis_button)
         self.verticalLayout_2.addWidget(self.password_frame)
         self.password2_frame = QtWidgets.QFrame(parent=self.frame)
         self.password2_frame.setMinimumSize(QtCore.QSize(0, 0))
@@ -327,6 +363,7 @@ class UiProfile(object):
                                           "padding-left: 20px\n"
                                           "")
         self.password2_line.setMaxLength(20)
+        self.password2_line.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
         self.password2_line.setObjectName("password2_line")
         self.horizontalLayout_8.addWidget(self.password2_line)
         self.verticalLayout_2.addWidget(self.password2_frame)
@@ -347,7 +384,7 @@ class UiProfile(object):
                                            "    font: 75 14pt \"Bahnschrift\";\n"
                                            "    color: rgb(255, 255, 255);\n"
                                            "    background-color: rgb(120, 183, 140);\n"
-                                           "    border-radius: 20px;                     /* <----  20px  */ \n"
+                                           "    border-radius: 10px;                     /* <----  20px  */ \n"
                                            "    border: 2px solid #094065;\n"
                                            "}\n"
                                            "\n"
@@ -355,7 +392,7 @@ class UiProfile(object):
                                            "    font: 75 14pt \"Bahnschrift\";\n"
                                            "    color: rgb(255, 255, 255);\n"
                                            "    background-color: rgb(100, 183, 140);\n"
-                                           "    border-radius: 20px;                     /* <----  20px  */ \n"
+                                           "    border-radius: 10px;                     /* <----  20px  */ \n"
                                            "    border: 2px solid #094065;\n"
                                            "}\n"
                                            "\n"
@@ -363,7 +400,7 @@ class UiProfile(object):
                                            "    font: 75 14pt \"Bahnschrift\";\n"
                                            "    color: rgb(255, 255, 255);\n"
                                            "    background-color: rgb(88, 162, 123);\n"
-                                           "    border-radius: 20px;                     /* <----  20px  */ \n"
+                                           "    border-radius: 10px;                     /* <----  20px  */ \n"
                                            "    border: 2px solid #094065;\n"
                                            "}")
         self.chanhe_password.setObjectName("chanhe_password")
@@ -382,7 +419,7 @@ class UiProfile(object):
                                        "    font: 75 14pt \"Bahnschrift\";\n"
                                        "    color: rgb(255, 255, 255);\n"
                                        "    background-color: rgb(120, 183, 140);\n"
-                                       "    border-radius: 20px;                     /* <----  20px  */ \n"
+                                       "    border-radius: 10px;\n"
                                        "    border: 2px solid #094065;\n"
                                        "}\n"
                                        "\n"
@@ -390,7 +427,7 @@ class UiProfile(object):
                                        "    font: 75 14pt \"Bahnschrift\";\n"
                                        "    color: rgb(255, 255, 255);\n"
                                        "    background-color: rgb(100, 183, 140);\n"
-                                       "    border-radius: 20px;                     /* <----  20px  */ \n"
+                                       "    border-radius: 10px;\n"
                                        "    border: 2px solid #094065;\n"
                                        "}\n"
                                        "\n"
@@ -398,7 +435,7 @@ class UiProfile(object):
                                        "    font: 75 14pt \"Bahnschrift\";\n"
                                        "    color: rgb(255, 255, 255);\n"
                                        "    background-color: rgb(88, 162, 123);\n"
-                                       "    border-radius: 20px;                     /* <----  20px  */ \n"
+                                       "    border-radius: 10px;\n"
                                        "    border: 2px solid #094065;\n"
                                        "}")
         self.save_button.setObjectName("save_button")
@@ -413,6 +450,7 @@ class UiProfile(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.exit_button.setText(_translate("MainWindow", "Exit"))
         self.back.setText(_translate("MainWindow", "Back"))
         self.name_title.setText(_translate("MainWindow", "Name"))
         self.name_line.setPlaceholderText(_translate("MainWindow", "name"))
