@@ -1,5 +1,5 @@
 import psycopg2
-from PyQt6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QWidget
+from PyQt6.QtWidgets import QMainWindow
 from ui.signUpMenu import UiSignUp
 from windows.styles import *
 
@@ -65,7 +65,7 @@ class SignUp(QMainWindow):
 
         # if required fields are missed -> highlight missed fields
         else:
-            self.ui.RegistrationTitle.setText("Required field are missed!")
+            self.ui.RegistrationTitle.setText("Missing required fields!")
             for field in [self.ui.name, self.ui.login, self.ui.password, self.ui.passwordRep]:
                 if len(field.text()) == 0:
                     field.setStyleSheet(DEFAULT_LINE_STYLE.replace(BLACK, RED))

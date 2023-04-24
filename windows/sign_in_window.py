@@ -1,5 +1,5 @@
 import psycopg2
-from PyQt6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QWidget
+from PyQt6.QtWidgets import QMainWindow
 from ui.signInMenu import UiSignIn
 from windows.sign_up_window import SignUp
 from windows.main_window import MainWindow
@@ -10,6 +10,7 @@ class SignIn(QMainWindow):
     def __init__(self):
         super(SignIn, self).__init__()
         self.sign_up = None
+        self.main = None
         self.ui = UiSignIn()
         self.ui.setupUi(self)
 
@@ -26,10 +27,10 @@ class SignIn(QMainWindow):
 
         # empty fields check, if true -> mark red empty fields
         if len(login) == 0:
-            self.ui.helloTitle.setText("Some fields are missed!")
+            self.ui.helloTitle.setText("Missing required fields!")
             self.ui.login.setStyleSheet(DEFAULT_LINE_STYLE.replace(BLACK, RED))
         if len(password) == 0:
-            self.ui.helloTitle.setText("Some fields are missed!")
+            self.ui.helloTitle.setText("Missing required fields!")
             self.ui.password.setStyleSheet(DEFAULT_LINE_STYLE.replace(BLACK, RED))
 
         if len(login) != 0 and len(password) != 0:
@@ -50,9 +51,8 @@ class SignIn(QMainWindow):
                         self.ui.helloTitle.setText("PASSED!")
                         self.ui.helloTitle.setStyleSheet("color: rgb(120, 183, 140);")
                         self.close()
-                        global main
-                        main = MainWindow()
-                        main.show()
+                        self.main = MainWindow(login, password)
+                        self.main.show()
                     # if database password != input password
                     else:
                         self.ui.helloTitle.setText("Wrong password!")
