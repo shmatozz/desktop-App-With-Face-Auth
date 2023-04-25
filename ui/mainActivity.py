@@ -5,14 +5,10 @@ from ui import icons_rc
 class UiMainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(800, 822)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
-        MainWindow.setSizePolicy(sizePolicy)
+        MainWindow.resize(800, 800)
         MainWindow.setMinimumSize(QtCore.QSize(800, 800))
-        MainWindow.setMaximumSize(QtCore.QSize(800, 822))
+        MainWindow.setMaximumSize(QtCore.QSize(800, 800))
+        MainWindow.setWindowIcon(QtGui.QIcon(":/icons/icons/home.png"))
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.centralwidget)

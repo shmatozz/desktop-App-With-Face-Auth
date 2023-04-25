@@ -1,16 +1,17 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
-from PyQt6.QtWidgets import QDialog
 
 
-class UiConfirm(QDialog):
+class UiConfirm(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.setWindowModality(QtCore.Qt.WindowModality.NonModal)
-        Dialog.resize(400, 200)
-        Dialog.setMinimumSize(QtCore.QSize(400, 200))
-        Dialog.setMaximumSize(QtCore.QSize(400, 200))
+        Dialog.resize(300, 150)
+        Dialog.setMinimumSize(QtCore.QSize(300, 150))
+        Dialog.setMaximumSize(QtCore.QSize(300, 150))
         Dialog.setContextMenuPolicy(QtCore.Qt.ContextMenuPolicy.NoContextMenu)
+        Dialog.setStyleSheet("background-color: rgb(255, 255, 255);\nborder-radius: 20px;\n")
         Dialog.setSizeGripEnabled(False)
+        Dialog.setWindowIcon(QtGui.QIcon(":/icons/icons/chat.png"))
         self.horizontalLayout = QtWidgets.QHBoxLayout(Dialog)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.dialog_frame = QtWidgets.QFrame(parent=Dialog)
@@ -22,9 +23,9 @@ class UiConfirm(QDialog):
         self.question_laber = QtWidgets.QLabel(parent=self.dialog_frame)
         font = QtGui.QFont()
         font.setFamily("Bahnschrift")
-        font.setPointSize(24)
+        font.setPointSize(20)
         self.question_laber.setFont(font)
-        self.question_laber.setObjectName("question_laber")
+        self.question_laber.setObjectName("question_label")
         self.verticalLayout.addWidget(self.question_laber, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
         self.frame_2 = QtWidgets.QFrame(parent=self.dialog_frame)
         self.frame_2.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
