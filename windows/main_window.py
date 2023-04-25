@@ -1,13 +1,16 @@
 import psycopg2
+from PIL import Image
 from PyQt6 import QtGui, QtCore
-from PyQt6.QtCore import QPropertyAnimation, QEvent
+from PyQt6.QtCore import QPropertyAnimation
 from PyQt6.QtGui import QPixmap
-from PyQt6.QtWidgets import QMainWindow, QLineEdit, QDialog, QFileDialog, QListWidget
+from PyQt6.QtWidgets import QMainWindow, QLineEdit, QDialog, QFileDialog
 from ui.confirm_dialog import UiConfirm
 from ui.mainActivity import UiMainWindow
 from ui.profile import UiProfile
+from ui.settings import UiSettings
 from windows.styles import *
 from shutil import copy
+from facenet_pytorch import MTCNN
 
 
 class Dialog(QDialog):
@@ -27,6 +30,7 @@ class MainWindow(QMainWindow):
         self.ui = UiMainWindow()  # main window ui
         self.ui.setupUi(self)
         self.profile = UiProfile()  # profile ui
+        self.settings = UiSettings()
         MainWindow.setWindowTitle(self, f"{login}")
         self.ui.hello_title.setText(f"Hello, {login}!")
         # positioning window in the center of the screen
@@ -35,16 +39,20 @@ class MainWindow(QMainWindow):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
+        # connect buttons
         self.ui.button.clicked.connect(self.open_menu)
         self.ui.profile.clicked.connect(self.open_profile)
+        self.ui.settings.clicked.connect(self.open_settings)
 
-        self.login = login
-        self.password = password
-        self.load_image()
+        # some user data
+        self.user_data = {"login": str, "password": str, "email": str, "name": str, "surname": str,
+                          "user_photo": bytes, "face_photo": bytes, "face_auth": False}
+        self.load_data(login)
+        self.settings_changed = None
         self.animation = None
         self.dialog = None
-        self.signin = None
 
+    # open navigation menu
     def open_menu(self):
         width = self.ui.slide_menu_cont.width()
         if width == 0:
@@ -66,27 +74,17 @@ class MainWindow(QMainWindow):
         # change ui
         self.ui = self.profile
         self.ui.setupUi(self)
-        MainWindow.setWindowTitle(self, f"{self.login}")
+        MainWindow.setWindowTitle(self, f"{self.user_data['login']}")
 
-        try:
-            # connect to database
-            connection = self.connect_to_db()
-
-            with connection.cursor() as cursor:
-                cursor.execute(f"SELECT * from users where login = '{self.login}'")
-                user_data = cursor.fetchone()  # returns tuple (uid, name, surname, email, login, password)
-                self.ui.name_line.setText(user_data[1])  # set name
-                self.ui.surname_line.setText(user_data[2])  # set surname
-                self.ui.email_line.setText(user_data[3])  # set email
-                self.ui.login_line.setText(user_data[4])  # set login
-                self.ui.user_photo.setPixmap(QPixmap("user_data/user_photo.png"))
-
-            connection.close()
-        except psycopg2.Error as _ex:
-            print("[INFO] database working error")
+        self.ui.name_line.setText(self.user_data["name"])  # set name
+        self.ui.surname_line.setText(self.user_data["surname"])  # set surname
+        self.ui.email_line.setText(self.user_data["email"])  # set email
+        self.ui.login_line.setText(self.user_data["login"])  # set login
+        self.ui.user_photo.setPixmap(QPixmap("user_data/user_photo.png"))
+        self.ui.user_photo.setStyleSheet("border-radius: 0px;\nborder: 2px solid #000000;")
 
         # connect buttons of new ui
-        self.ui.chanhe_password.clicked.connect(self.change_password)   # opens field for entering new password
+        self.ui.chanhe_password.clicked.connect(self.change_password)  # opens field for entering new password
         self.ui.save_button.clicked.connect(self.save_data)  # save info to users database
         self.ui.back.clicked.connect(self.back_to_main)  # returns back to main window
         self.ui.exit_button.clicked.connect(self.exit_from_account)  # exit from user account
@@ -115,7 +113,7 @@ class MainWindow(QMainWindow):
 
                             cursor.execute(f"update users "
                                            f"set user_photo = {psycopg2.Binary(drawing)} "
-                                           f"where login = '{self.login}'")
+                                           f"where login = '{self.user_data['login']}'")
                             connection.commit()
 
                         connection.close()
@@ -149,7 +147,7 @@ class MainWindow(QMainWindow):
         email = self.profile.email_line.text()
         login = self.profile.login_line.text()
         new_password = self.profile.password_line.text()
-        new_password = new_password if len(new_password) > 0 else self.password
+        new_password = new_password if len(new_password) > 0 else self.user_data["password"]
 
         # if OK pressed in dialog window -> save info to users database
         def ok_pressed():
@@ -198,13 +196,14 @@ class MainWindow(QMainWindow):
         # change ui
         self.ui = UiMainWindow()
         self.ui.setupUi(self)
-        MainWindow.setWindowTitle(self, f"{self.login}")
+        MainWindow.setWindowTitle(self, f"{self.user_data['login']}")
 
-        self.ui.hello_title.setText(f"Hello, {self.login}!")
+        self.ui.hello_title.setText(f"Hello, {self.user_data['login']}!")
 
         # connect buttons of new ui
         self.ui.button.clicked.connect(self.open_menu)
         self.ui.profile.clicked.connect(self.open_profile)
+        self.ui.settings.clicked.connect(self.open_settings)
 
     # exit from account to sing in menu
     def exit_from_account(self):
@@ -225,18 +224,109 @@ class MainWindow(QMainWindow):
         self.dialog = Dialog(ok_pressed, cancel_pressed)
         self.dialog.show()
 
-    def load_image(self):
+    # Settings =======================================================================
+    # open settings menu
+    def open_settings(self):
+        # setup interface
+        self.ui = self.settings
+        self.ui.setupUi(self)
+        MainWindow.setWindowTitle(self, f"{self.user_data['login']}")
+
+        if self.user_data["face_auth"]:
+            self.ui.enable_button.setChecked(True)
+
+        # connect buttons of new gui
+        self.ui.back_button.clicked.connect(self.save_and_back)  # return to main menu
+        self.ui.enable_button.toggled.connect(self.toggle_face_auth)  # open upload menu
+        self.ui.uploadButton.clicked.connect(self.upload_face)  # upload face photo
+
+        self.settings_changed = False
+
+    def toggle_face_auth(self):
+        self.settings_changed = True
+        if self.settings.enable_button.isChecked():
+            self.animation = QPropertyAnimation(self.settings.upload_frame, b"maximumHeight")
+            self.animation.setDuration(150)
+            self.animation.setStartValue(0)
+            self.animation.setEndValue(150)
+            self.animation.start()
+        else:
+            self.user_data["face_auth"] = False
+            self.settings.back_button.setEnabled(True)
+            self.settings.upload_frame.setMaximumHeight(0)
+        pass
+
+    def upload_face(self):
+        dialog = QFileDialog(self)
+        dialog.setDirectory(r'C:')
+        dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
+        dialog.setNameFilter("Images (*.png *.jpg)")
+        dialog.setViewMode(QFileDialog.ViewMode.List)
+        if dialog.exec():
+            filenames = dialog.selectedFiles()
+            if filenames:
+                mtcnn = MTCNN(image_size=250, margin=0, min_face_size=20)  # initializing mtcnn for face detection
+                img = Image.open(filenames[0])
+                face, prob = mtcnn(img, return_prob=True)  # returns cropped face and probability
+                if face is None or prob < 0.95:
+                    self.settings.label.setText("Your photo is not correct\nPlease, load another one")
+                    self.settings.back_button.setEnabled(False)
+                else:
+                    self.settings.label.setText("OK! Now you can sigh in with your face!")
+                    self.user_data["face_auth"] = True
+                    copy(filenames[0], "user_data/face_photo.png")
+                    self.settings.back_button.setEnabled(True)
+
+    def save_and_back(self):
+        if self.settings_changed:
+            try:
+                # connect to database
+                connection = self.connect_to_db()
+
+                with connection.cursor() as cursor:
+                    cursor.execute(f"update users "
+                                   f"set enable_face_auth = {self.user_data['face_auth']}, "
+                                   f"user_face = {psycopg2.Binary(open('user_data/face_photo.png', 'rb').read())} "
+                                   f"where login = '{self.user_data['login']}'")
+                    connection.commit()
+
+                # close connection
+                connection.close()
+            except psycopg2.Error as _ex:
+                print("[INFO] database working error")
+
+        self.back_to_main()
+
+    # ====================================================
+
+    # loading user profile image from data base
+    def load_data(self, login):
         try:
             connect = self.connect_to_db()
 
             with connect.cursor() as cursor:
-                cursor.execute(f"select user_photo from users where login = '{self.login}'")
-                photo_b = cursor.fetchone()[0]
-                if photo_b is not None:
+                cursor.execute(f"select * from users where login = '{login}'")
+                info = cursor.fetchone()
+                self.user_data["name"] = info[1]
+                self.user_data["surname"] = info[2]
+                self.user_data["email"] = info[3]
+                self.user_data["login"] = info[4]
+                self.user_data["password"] = info[5]
+                self.user_data["user_photo"] = info[6]
+                self.user_data["face_auth"] = info[7]
+                self.user_data["face_photo"] = info[8]
+                if self.user_data["user_photo"] is not None:
                     with open("user_data/user_photo.png", "wb") as photo:
-                        photo.write(photo_b)
+                        photo.write(bytes(self.user_data["user_photo"]))
                 else:
                     with open("user_data/user_photo.png", "wb") as photo, open("ui/icons/person.png", "rb") as a:
+                        photo_b = a.read()
+                        photo.write(photo_b)
+                if self.user_data.get("face_photo") is not None:
+                    with open("user_data/face_photo.png", "wb") as photo:
+                        photo.write(bytes(self.user_data["face_photo"]))
+                else:
+                    with open("user_data/face_photo.png", "wb") as photo, open("ui/icons/person.png", "rb") as a:
                         photo_b = a.read()
                         photo.write(photo_b)
 
@@ -251,4 +341,3 @@ class MainWindow(QMainWindow):
                                 user="postgres",
                                 password="1234567890",
                                 database="app_users")
-
