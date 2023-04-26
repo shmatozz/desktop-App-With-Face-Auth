@@ -25,7 +25,7 @@ class Dialog(QDialog):
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, login, password):
+    def __init__(self, login):
         super(MainWindow, self).__init__()
         self.ui = UiMainWindow()  # main window ui
         self.ui.setupUi(self)
@@ -154,11 +154,10 @@ class MainWindow(QMainWindow):
             try:
                 # connect to database
                 connection = self.connect_to_db()
-
                 with connection.cursor() as cursor:
                     cursor.execute(f"select login from users where login = '{login}'")
                     info = cursor.fetchone()
-                    if info is not None and info[0] != self.login:
+                    if info is not None and info[0] != self.user_data["login"]:
                         self.profile.login_line.setText("Login is occupied!")
                         self.profile.login_line.setStyleSheet(DEFAULT_LINE_STYLE.replace(BLACK, RED))
                     else:
@@ -168,19 +167,24 @@ class MainWindow(QMainWindow):
                                        f"surname = '{surname.capitalize()}', "
                                        f"email = '{email}', "
                                        f"login = '{login}', "
-                                       f"password = '{new_password}' "
-                                       f"where login = '{self.login}'")
+                                       f"password = '{new_password}', "
+                                       f"user_photo = {psycopg2.Binary(open('user_data/user_photo.png', 'rb').read())},"
+                                       f" enable_face_auth = {self.user_data['face_auth']}, "
+                                       f"user_face = {psycopg2.Binary(open('user_data/face_photo.png', 'rb').read())} "
+                                       f"where login = '{self.user_data['login']}'")
                         connection.commit()
 
-                        self.login = login
-                        if new_password != self.password:
-                            self.password = new_password
+                        self.user_data["login"] = login
+                        self.user_data["email"] = email
+                        self.user_data["name"] = name
+                        self.user_data["surname"] = surname
+                        if new_password != self.user_data["password"]:
+                            self.user_data["password"] = new_password
 
                 # close connection
                 connection.close()
             except psycopg2.Error as _ex:
                 print("[INFO] database working error")
-
             self.dialog.close()
 
         # if CANCEL pressed in dialog window -> close window
@@ -188,6 +192,7 @@ class MainWindow(QMainWindow):
             self.dialog.close()
 
         # open dialog window
+        print(1)
         self.dialog = Dialog(ok_pressed, cancel_pressed)
         self.dialog.show()
 
