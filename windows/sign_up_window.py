@@ -1,7 +1,10 @@
 import psycopg2
-from PyQt6.QtWidgets import QMainWindow
+from PyQt6.QtWidgets import QMainWindow, QFileDialog
 from ui.signUpMenu import UiSignUp
 from windows.styles import *
+from facenet_pytorch import MTCNN
+from PIL import Image
+from shutil import copy
 
 
 class SignUp(QMainWindow):
@@ -10,6 +13,7 @@ class SignUp(QMainWindow):
         self.ui = UiSignUp()
         self.ui.setupUi(self)
         self.sign_in = sign_in
+        self.face_auth = False
 
         self.ui.backButton.clicked.connect(self.back)
         self.ui.SingUpButton.clicked.connect(self.sign_up)
@@ -50,8 +54,15 @@ class SignUp(QMainWindow):
                             self.ui.login.setStyleSheet(DEFAULT_LINE_STYLE.replace(BLACK, RED))
                         # if everything is OK -> add new user to owr database
                         else:
-                            cursor.execute(f"insert into users (user_name, surname, email, login, password) "
-                                           f"values ('{name}', {surname}, {email}, '{login}', '{password}')")
+                            if self.face_auth:
+                                cursor.execute(f"insert into users (user_name, surname, email, login, password, "
+                                               f"enable_face_auth, user_face) "
+                                               f"values ('{name}', {surname}, {email}, '{login}', '{password}', "
+                                               f"{self.face_auth}, "
+                                               f"{psycopg2.Binary(open('user_data/face_photo.png', 'rb').read())})")
+                            else:
+                                cursor.execute(f"insert into users (user_name, surname, email, login, password) "
+                                               f"values ('{name}', {surname}, {email}, '{login}', '{password}')")
                             connection.commit()
 
                             # if no error -> returns back to sign in window
@@ -71,7 +82,23 @@ class SignUp(QMainWindow):
                     field.setStyleSheet(DEFAULT_LINE_STYLE.replace(BLACK, RED))
 
     def upload(self):
-        pass
+        dialog = QFileDialog(self)
+        dialog.setDirectory(r'C:')
+        dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
+        dialog.setNameFilter("Images (*.png *.jpg)")
+        dialog.setViewMode(QFileDialog.ViewMode.List)
+        if dialog.exec():
+            filenames = dialog.selectedFiles()
+            if filenames:
+                mtcnn = MTCNN(image_size=1000, margin=0, min_face_size=20)  # initializing mtcnn for face detection
+                img = Image.open(filenames[0])
+                face, prob = mtcnn(img.resize((int(img.size[0] / 2), int(img.size[1] / 2))), return_prob=True)
+                if face is None or prob < 0.95:
+                    self.ui.uploadMes.setText("Your photo is not correct\nPlease, load another one")
+                else:
+                    self.ui.uploadMes.setText("OK! Now you can sigh in with your face!")
+                    self.face_auth = True
+                    copy(filenames[0], "user_data/face_photo.png")
 
     def back(self):
         self.close()
