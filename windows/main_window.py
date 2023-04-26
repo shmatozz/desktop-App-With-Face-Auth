@@ -158,7 +158,7 @@ class MainWindow(QMainWindow):
                     cursor.execute(f"select login from users where login = '{login}'")
                     info = cursor.fetchone()
                     if info is not None and info[0] != self.user_data["login"]:
-                        self.profile.login_line.setText("Login is occupied!")
+                        self.profile.login_line.setText(OCCUPIED_LOGIN.replace(" already ", ' '))
                         self.profile.login_line.setStyleSheet(DEFAULT_LINE_STYLE.replace(BLACK, RED))
                     else:
                         self.profile.login_line.setStyleSheet(DEFAULT_LINE_STYLE)
@@ -192,7 +192,6 @@ class MainWindow(QMainWindow):
             self.dialog.close()
 
         # open dialog window
-        print(1)
         self.dialog = Dialog(ok_pressed, cancel_pressed)
         self.dialog.show()
 
@@ -274,10 +273,10 @@ class MainWindow(QMainWindow):
                 img = Image.open(filenames[0])
                 face, prob = mtcnn(img, return_prob=True)  # returns cropped face and probability
                 if face is None or prob < 0.95:
-                    self.settings.label.setText("Your photo is not correct\nPlease, load another one")
+                    self.settings.label.setText(INCORRECT_PHOTO)
                     self.settings.back_button.setEnabled(False)
                 else:
-                    self.settings.label.setText("OK! Now you can sigh in with your face!")
+                    self.settings.label.setText(OK_PHOTO)
                     self.user_data["face_auth"] = True
                     copy(filenames[0], "user_data/face_photo.png")
                     self.settings.back_button.setEnabled(True)
