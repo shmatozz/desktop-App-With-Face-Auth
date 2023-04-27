@@ -3,7 +3,7 @@ import cv2                                  # camera capture lib
 from torch import dist                      # distance between two photo tensors
 from PIL import Image                       # image class for networks
 from PyQt6.QtWidgets import QMainWindow     # PyQt QMainWindow class for inheritance
-from ui.signInMenu import UiSignIn          # sign in ui
+from ui.sign_in import UiSignIn          # sign in ui
 from windows.sign_up_window import SignUp   # sign up class
 from windows.main_window import MainWindow  # main window class
 from windows.styles import *                # window styles and resources
@@ -61,10 +61,12 @@ class SignIn(QMainWindow):
                 self.ui.login.setStyleSheet(DEFAULT_LINE_STYLE.replace(BLACK, RED))  # mark login field
             # if database password == input password -> remember current user data and open main window
             elif info[0] == password:
-                with open("user_data/data.py", "w") as datafile:  # write current data to data file
-                    datafile.seek(0)
-                    datafile.write(f"logged = True\nlogin = '{login}'\npassword = '{password}'\n")
-                    datafile.truncate()
+                # if user press remember me flag -> remember user data
+                if self.ui.remember_me_check.isChecked():
+                    with open("user_data/data.py", "w") as datafile:  # write current data to data file
+                        datafile.seek(0)
+                        datafile.write(f"logged = True\nlogin = '{login}'\npassword = '{password}'\n")
+                        datafile.truncate()
 
                 self.close()                   # close sign in window
                 self.main = MainWindow(login)  # init main window
@@ -93,16 +95,18 @@ class SignIn(QMainWindow):
                     distance = dist(emb_current, emb_database).item()         # calculate distance
                     print(distance)
                     # if distance is rather small -> inc success count
-                    if distance < 0.6:
+                    if distance < 0.45:
                         count_success += 1
                 count_trys += 1
             self.cam.release()  # close camera
             # if at least 1 try was successful -> remember current user data and open main window
             if count_success > 0:
-                with open("user_data/data.py", "w") as datafile:  # write current data to data file
-                    datafile.seek(0)
-                    datafile.write(f"logged = True\nlogin = '{login}'\npassword = '{info[0]}'\n")
-                    datafile.truncate()
+                # if user press remember me flag -> remember user data
+                if self.ui.remember_me_check.isChecked():
+                    with open("user_data/data.py", "w") as datafile:  # write current data to data file
+                        datafile.seek(0)
+                        datafile.write(f"logged = True\nlogin = '{login}'\npassword = '{info[0]}'\n")
+                        datafile.truncate()
                 self.close()                   # close sign in window
                 self.main = MainWindow(login)  # init main window
                 self.main.show()               # open main window
