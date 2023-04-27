@@ -5,7 +5,7 @@ from PyQt6.QtCore import QPropertyAnimation
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QMainWindow, QLineEdit, QDialog, QFileDialog
 from ui.confirm_dialog import UiConfirm
-from ui.mainActivity import UiMainWindow
+from ui.main_menu import UiMainWindow
 from ui.profile import UiProfile
 from ui.settings import UiSettings
 from windows.styles import *
@@ -56,7 +56,7 @@ class MainWindow(QMainWindow):
     def open_menu(self):
         width = self.ui.slide_menu_cont.width()
         if width == 0:
-            new_width = 200
+            new_width = 170
             self.ui.button.setIcon(QtGui.QIcon(":/icons/icons/arrow_left.png"))
         else:
             new_width = 0

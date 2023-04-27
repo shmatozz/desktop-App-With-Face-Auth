@@ -43,14 +43,14 @@
       </property>
       <property name="minimumSize">
        <size>
-        <width>200</width>
-        <height>800</height>
+        <width>170</width>
+        <height>778</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>0</width>
-        <height>800</height>
+        <width>170</width>
+        <height>778</height>
        </size>
       </property>
       <property name="styleSheet">
@@ -82,15 +82,21 @@
         <widget class="QFrame" name="slide_menu">
          <property name="minimumSize">
           <size>
-           <width>200</width>
+           <width>170</width>
            <height>0</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>220</width>
+           <width>170</width>
            <height>976</height>
           </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(255, 255, 255);
+border-radius: 15px;
+
+</string>
          </property>
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
@@ -106,7 +112,7 @@
            <number>0</number>
           </property>
           <property name="topMargin">
-           <number>5</number>
+           <number>0</number>
           </property>
           <property name="rightMargin">
            <number>0</number>
@@ -116,6 +122,18 @@
           </property>
           <item>
            <widget class="QFrame" name="menu">
+            <property name="minimumSize">
+             <size>
+              <width>170</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>170</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
@@ -130,7 +148,7 @@
               <number>0</number>
              </property>
              <property name="topMargin">
-              <number>0</number>
+              <number>5</number>
              </property>
              <property name="rightMargin">
               <number>0</number>
@@ -165,6 +183,18 @@
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="minimumSize">
+                <size>
+                 <width>170</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>170</width>
+                 <height>16777215</height>
+                </size>
+               </property>
                <property name="frameShape">
                 <enum>QFrame::StyledPanel</enum>
                </property>
@@ -175,40 +205,59 @@
                 <property name="spacing">
                  <number>20</number>
                 </property>
-                <property name="topMargin">
-                 <number>30</number>
+                <property name="leftMargin">
+                 <number>0</number>
                 </property>
-                <item>
+                <property name="topMargin">
+                 <number>15</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item alignment="Qt::AlignHCenter">
                  <widget class="QPushButton" name="profile">
                   <property name="minimumSize">
                    <size>
-                    <width>0</width>
+                    <width>150</width>
                     <height>40</height>
                    </size>
                   </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>150</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>Bahnschrift</family>
+                    <pointsize>14</pointsize>
+                    <kerning>false</kerning>
+                   </font>
+                  </property>
                   <property name="styleSheet">
                    <string notr="true">QPushButton {
-	font: 75 14pt &quot;Bahnschrift&quot;;
 	color: rgb(255, 255, 255);
 	background-color: rgb(120, 183, 140);
-	border-radius: 20px;                     /* &lt;----  20px  */ 
-	border: 2px solid #094065;
+	border-radius: 10px;
+	border: 2px solid #000000;
 }
 
 QPushButton:hover{
-	font: 75 14pt &quot;Bahnschrift&quot;;
 	color: rgb(255, 255, 255);
 	background-color: rgb(100, 183, 140);
-	border-radius: 20px;                     /* &lt;----  20px  */ 
-	border: 2px solid #094065;
+	border-radius: 10px;
+	border: 2px solid #000000;
 }
 
 QPushButton:pressed{
-	font: 75 14pt &quot;Bahnschrift&quot;;
 	color: rgb(255, 255, 255);
 	background-color: rgb(88, 162, 123);
-	border-radius: 20px;                     /* &lt;----  20px  */ 
-	border: 2px solid #094065;
+	border-radius: 10px;
+	border: 2px solid #000000;
 }</string>
                   </property>
                   <property name="text">
@@ -216,37 +265,47 @@ QPushButton:pressed{
                   </property>
                  </widget>
                 </item>
-                <item>
+                <item alignment="Qt::AlignHCenter">
                  <widget class="QPushButton" name="settings">
                   <property name="minimumSize">
                    <size>
-                    <width>0</width>
+                    <width>150</width>
                     <height>40</height>
                    </size>
                   </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>150</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>Bahnschrift</family>
+                    <pointsize>14</pointsize>
+                    <kerning>false</kerning>
+                   </font>
+                  </property>
                   <property name="styleSheet">
                    <string notr="true">QPushButton {
-	font: 75 14pt &quot;Bahnschrift&quot;;
 	color: rgb(255, 255, 255);
 	background-color: rgb(120, 183, 140);
-	border-radius: 20px;                     /* &lt;----  20px  */ 
-	border: 2px solid #094065;
+	border-radius: 10px;
+	border: 2px solid #000000;
 }
 
 QPushButton:hover{
-	font: 75 14pt &quot;Bahnschrift&quot;;
 	color: rgb(255, 255, 255);
 	background-color: rgb(100, 183, 140);
-	border-radius: 20px;                     /* &lt;----  20px  */ 
-	border: 2px solid #094065;
+	border-radius: 10px;
+	border: 2px solid #000000;
 }
 
 QPushButton:pressed{
-	font: 75 14pt &quot;Bahnschrift&quot;;
 	color: rgb(255, 255, 255);
 	background-color: rgb(88, 162, 123);
-	border-radius: 20px;                     /* &lt;----  20px  */ 
-	border: 2px solid #094065;
+	border-radius: 10px;
+	border: 2px solid #000000;
 }</string>
                   </property>
                   <property name="text">
@@ -254,36 +313,46 @@ QPushButton:pressed{
                   </property>
                  </widget>
                 </item>
-                <item>
+                <item alignment="Qt::AlignHCenter">
                  <widget class="QPushButton" name="about">
                   <property name="minimumSize">
                    <size>
-                    <width>0</width>
+                    <width>150</width>
                     <height>40</height>
                    </size>
                   </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>150</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>Bahnschrift</family>
+                    <pointsize>14</pointsize>
+                    <kerning>false</kerning>
+                   </font>
+                  </property>
                   <property name="styleSheet">
                    <string notr="true">QPushButton {
-	font: 75 14pt &quot;Bahnschrift&quot;;
 	color: rgb(120, 183, 140);
 	background-color: rgb(255, 255, 255);
-	border-radius: 20px;                     /* &lt;----  20px  */ 
+	border-radius: 10px;
 	border: 2px solid #000000;
 }
 
 QPushButton:hover{
-	font: 75 14pt &quot;Bahnschrift&quot;;
 	color: rgb(255, 255, 255);
 	background-color: rgb(100, 183, 140);
-	border-radius: 20px;                     /* &lt;----  20px  */ 
+	border-radius: 10px;
 	border: 2px solid #000000;
 }
 
 QPushButton:pressed{
-	font: 75 14pt &quot;Bahnschrift&quot;;
 	color: rgb(255, 255, 255);
 	background-color: rgb(88, 162, 123);
-	border-radius: 20px;                     /* &lt;----  20px  */ 
+	border-radius: 10px;
 	border: 2px solid #000000;
 }</string>
                   </property>
@@ -503,6 +572,12 @@ QPushButton:pressed {
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(255, 255, 255);
+border-radius: 15px;
+
+</string>
          </property>
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>

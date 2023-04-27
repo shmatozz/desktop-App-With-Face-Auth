@@ -31,9 +31,9 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
-     <layout class="QVBoxLayout" name="LogPassLayout" stretch="0,0,0,0">
+     <layout class="QVBoxLayout" name="LogPassLayout" stretch="0,0,0">
       <property name="spacing">
-       <number>50</number>
+       <number>0</number>
       </property>
       <property name="sizeConstraint">
        <enum>QLayout::SetFixedSize</enum>
@@ -42,7 +42,7 @@
        <number>0</number>
       </property>
       <property name="topMargin">
-       <number>100</number>
+       <number>50</number>
       </property>
       <property name="bottomMargin">
        <number>60</number>
@@ -60,103 +60,161 @@
         </property>
        </widget>
       </item>
-      <item alignment="Qt::AlignHCenter">
-       <widget class="QLineEdit" name="login">
+      <item>
+       <widget class="QFrame" name="log_pass_frame">
         <property name="minimumSize">
          <size>
-          <width>350</width>
-          <height>60</height>
+          <width>0</width>
+          <height>250</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>350</width>
-          <height>60</height>
+          <width>16777215</width>
+          <height>400</height>
          </size>
         </property>
-        <property name="font">
-         <font>
-          <family>Bahnschrift</family>
-          <pointsize>16</pointsize>
-         </font>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
         </property>
-        <property name="styleSheet">
-         <string notr="true">color: rgb(0, 0, 0);
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item alignment="Qt::AlignHCenter">
+          <widget class="QLineEdit" name="login">
+           <property name="minimumSize">
+            <size>
+             <width>350</width>
+             <height>60</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>350</width>
+             <height>60</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Bahnschrift</family>
+             <pointsize>16</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: rgb(0, 0, 0);
 background-color: rgb(255, 255, 255);
 border-radius: 15px;                     /* &lt;----  20px  */ 
 border: 2px solid #000000;
 padding-left: 20px
 </string>
-        </property>
-        <property name="maxLength">
-         <number>20</number>
-        </property>
-        <property name="placeholderText">
-         <string>login</string>
-        </property>
-        <property name="clearButtonEnabled">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item alignment="Qt::AlignHCenter">
-       <widget class="QLineEdit" name="password">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>350</width>
-          <height>60</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>350</width>
-          <height>60</height>
-         </size>
-        </property>
-        <property name="baseSize">
-         <size>
-          <width>350</width>
-          <height>60</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <family>Bahnschrift</family>
-          <pointsize>16</pointsize>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">color: rgb(0, 0, 0);
+           </property>
+           <property name="maxLength">
+            <number>20</number>
+           </property>
+           <property name="placeholderText">
+            <string>login</string>
+           </property>
+           <property name="clearButtonEnabled">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item alignment="Qt::AlignHCenter">
+          <widget class="QLineEdit" name="password">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>350</width>
+             <height>60</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>350</width>
+             <height>60</height>
+            </size>
+           </property>
+           <property name="baseSize">
+            <size>
+             <width>350</width>
+             <height>60</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Bahnschrift</family>
+             <pointsize>16</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: rgb(0, 0, 0);
 background-color: rgb(255, 255, 255);
 border-radius: 15px;                     /* &lt;----  20px  */ 
 border: 2px solid #000000;
 padding-left: 20px
 </string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="maxLength">
-         <number>19</number>
-        </property>
-        <property name="echoMode">
-         <enum>QLineEdit::Password</enum>
-        </property>
-        <property name="placeholderText">
-         <string>password</string>
-        </property>
-        <property name="clearButtonEnabled">
-         <bool>true</bool>
-        </property>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="maxLength">
+            <number>19</number>
+           </property>
+           <property name="echoMode">
+            <enum>QLineEdit::Password</enum>
+           </property>
+           <property name="placeholderText">
+            <string>password</string>
+           </property>
+           <property name="clearButtonEnabled">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item alignment="Qt::AlignHCenter">
+          <widget class="QCheckBox" name="remember_me_check">
+           <property name="maximumSize">
+            <size>
+             <width>400</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Bahnschrift</family>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Remember me</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
-      <item alignment="Qt::AlignHCenter">
+      <item alignment="Qt::AlignHCenter|Qt::AlignTop">
        <widget class="QFrame" name="Buttons">
         <property name="minimumSize">
          <size>
@@ -200,13 +258,13 @@ padding-left: 20px
            </property>
            <property name="minimumSize">
             <size>
-             <width>250</width>
+             <width>200</width>
              <height>50</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>250</width>
+             <width>200</width>
              <height>50</height>
             </size>
            </property>
@@ -219,7 +277,7 @@ padding-left: 20px
            <property name="font">
             <font>
              <family>Bahnschrift</family>
-             <pointsize>14</pointsize>
+             <pointsize>16</pointsize>
              <weight>9</weight>
              <italic>false</italic>
              <bold>false</bold>
@@ -236,26 +294,23 @@ padding-left: 20px
            </property>
            <property name="styleSheet">
             <string notr="true">QPushButton {
-	font: 75 14pt &quot;Bahnschrift&quot;;
 	color: rgb(255, 255, 255);
 	background-color: rgb(120, 183, 140);
-	border-radius: 20px;                     /* &lt;----  20px  */ 
+	border-radius: 10px;
 	border: 2px solid #094065;
 }
 
 QPushButton:hover{
-	font: 75 14pt &quot;Bahnschrift&quot;;
 	color: rgb(255, 255, 255);
 	background-color: rgb(100, 183, 140);
-	border-radius: 20px;                     /* &lt;----  20px  */ 
+	border-radius: 10px;
 	border: 2px solid #094065;
 }
 
 QPushButton:pressed{
-	font: 75 14pt &quot;Bahnschrift&quot;;
 	color: rgb(255, 255, 255);
 	background-color: rgb(88, 162, 123);
-	border-radius: 20px;                     /* &lt;----  20px  */ 
+	border-radius: 10px;
 	border: 2px solid #094065;
 }</string>
            </property>
@@ -290,26 +345,26 @@ QPushButton:pressed{
            </property>
            <property name="minimumSize">
             <size>
-             <width>200</width>
+             <width>150</width>
              <height>40</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>200</width>
+             <width>150</width>
              <height>40</height>
             </size>
            </property>
            <property name="baseSize">
             <size>
-             <width>200</width>
+             <width>150</width>
              <height>40</height>
             </size>
            </property>
            <property name="font">
             <font>
              <family>Bahnschrift</family>
-             <pointsize>12</pointsize>
+             <pointsize>13</pointsize>
              <weight>9</weight>
              <italic>false</italic>
              <bold>false</bold>
@@ -326,26 +381,23 @@ QPushButton:pressed{
            </property>
            <property name="styleSheet">
             <string notr="true">QPushButton {
-	font: 75 12pt &quot;Bahnschrift&quot;;
 	color: rgb(120, 183, 140);
 	background-color: rgb(255, 255, 255);
-	border-radius: 20px;                     /* &lt;----  20px  */ 
+	border-radius: 10px;
 	border: 2px solid #094065;
 }
 
 QPushButton:hover{
-	font: 75 12pt &quot;Bahnschrift&quot;;
 	color: rgb(255, 255, 255);
 	background-color: rgb(100, 183, 140);
-	border-radius: 20px;                     /* &lt;----  20px  */ 
+	border-radius: 10px;
 	border: 2px solid #094065;
 }
 
 QPushButton:pressed{
-	font: 75 12pt &quot;Bahnschrift&quot;;
 	color: rgb(255, 255, 255);
 	background-color: rgb(88, 162, 123);
-	border-radius: 20px;                     /* &lt;----  20px  */ 
+	border-radius: 10px; 
 	border: 2px solid #094065;
 }</string>
            </property>

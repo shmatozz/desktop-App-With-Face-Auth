@@ -18,6 +18,8 @@ class UiConfirm(object):
         self.dialog_frame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.dialog_frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.dialog_frame.setObjectName("dialog_frame")
+        self.dialog_frame.setStyleSheet("background-color: rgb(255, 255, 255);\n"
+                                        "border-radius: 20px;")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.dialog_frame)
         self.verticalLayout.setObjectName("verticalLayout")
         self.question_laber = QtWidgets.QLabel(parent=self.dialog_frame)
