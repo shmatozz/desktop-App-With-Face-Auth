@@ -36,9 +36,6 @@ class SignIn(QMainWindow):
         if len(login) == 0:
             self.ui.helloTitle.setText(MISSING_REQUIRED_FIELDS)                     # inform user
             self.ui.login.setStyleSheet(DEFAULT_LINE_STYLE.replace(BLACK, RED))     # mark empty field
-        if len(password) == 0:
-            self.ui.helloTitle.setText(MISSING_REQUIRED_FIELDS)                     # inform user
-            self.ui.password.setStyleSheet(DEFAULT_LINE_STYLE.replace(BLACK, RED))  # mark empty field
 
         # get information from database
         try:
@@ -53,14 +50,14 @@ class SignIn(QMainWindow):
         except psycopg2.Error:
             print("[INFO] database error")
 
+        # if user with such login was not found -> inform user
+        if info is None:
+            self.ui.helloTitle.setText(WRONG_LOGIN)                              # inform user
+            self.ui.login.setStyleSheet(DEFAULT_LINE_STYLE.replace(BLACK, RED))  # mark login field
         # if all fields are filled -> compare user input and info from database
-        if len(login) != 0 and len(password) != 0:
-            # info is None when there is no user with entered login
-            if info is None:
-                self.ui.helloTitle.setText(WRONG_LOGIN)                              # inform user
-                self.ui.login.setStyleSheet(DEFAULT_LINE_STYLE.replace(BLACK, RED))  # mark login field
+        elif len(login) != 0 and len(password) != 0:
             # if database password == input password -> remember current user data and open main window
-            elif info[0] == password:
+            if info[0] == password:
                 # if user press remember me flag -> remember user data
                 if self.ui.remember_me_check.isChecked():
                     with open("user_data/data.py", "w") as datafile:  # write current data to data file
@@ -98,7 +95,6 @@ class SignIn(QMainWindow):
                     if distance < 0.45:
                         count_success += 1
                 count_trys += 1
-            self.cam.release()  # close camera
             # if at least 1 try was successful -> remember current user data and open main window
             if count_success > 0:
                 # if user press remember me flag -> remember user data
@@ -107,12 +103,17 @@ class SignIn(QMainWindow):
                         datafile.seek(0)
                         datafile.write(f"logged = True\nlogin = '{login}'\npassword = '{info[0]}'\n")
                         datafile.truncate()
+                self.cam.release()             # close camera
                 self.close()                   # close sign in window
                 self.main = MainWindow(login)  # init main window
                 self.main.show()               # open main window
             # if no successful try -> inform user
             else:
                 self.ui.helloTitle.setText(TRY_AGAIN_OR_PASSWORD)
+        # if login filled but password missed -> inform user
+        else:
+            self.ui.helloTitle.setText(MISSING_REQUIRED_FIELDS)  # inform user
+            self.ui.password.setStyleSheet(DEFAULT_LINE_STYLE.replace(BLACK, RED))  # mark empty field
 
     # sign up button pressed
     def openSignUp(self):
