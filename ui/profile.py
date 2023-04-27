@@ -31,7 +31,7 @@ class UiProfile(object):
         self.user_photo = QtWidgets.QLabel(parent=self.photo)
         self.user_photo.setMinimumSize(QtCore.QSize(200, 200))
         self.user_photo.setMaximumSize(QtCore.QSize(200, 200))
-        self.user_photo.setStyleSheet("border-radius: 20px;  \n"
+        self.user_photo.setStyleSheet("border-radius: 0px;\n"
                                       "border: 2px solid #000000;")
         self.user_photo.setText("")
         self.user_photo.setPixmap(QtGui.QPixmap(":/icons/icons/person.png"))
