@@ -8,6 +8,7 @@ class UiMainWindow(object):
         MainWindow.resize(800, 800)
         # set app icon
         app_icon = QtGui.QIcon()
+        app_icon.addFile(":/icons/icons/home.png", QtCore.QSize(8, 8))
         app_icon.addFile(":/icons/icons/home.png", QtCore.QSize(16, 16))
         app_icon.addFile(":/icons/icons/home.png", QtCore.QSize(24, 24))
         app_icon.addFile(":/icons/icons/home.png", QtCore.QSize(32, 32))

@@ -1,8 +1,10 @@
 import psycopg2                                                           # PostgreSQL working lib
 from PIL import Image                                                     # image class for networks
 from PyQt6 import QtGui, QtCore                                           # PyQt packages
-from PyQt6.QtCore import QPropertyAnimation                               # PyQt animation
+from PyQt6.QtCore import QPropertyAnimation, QUrl  # PyQt animation
+from PyQt6.QtGui import QDesktopServices
 from PyQt6.QtWidgets import QMainWindow, QLineEdit, QDialog, QFileDialog  # PyQt ui classes
+from ui.about import UiAbout                                              # about window ui
 from ui.confirm_dialog import UiConfirm                                   # confirm window ui
 from ui.main_menu import UiMainWindow                                     # main window ui
 from ui.profile import UiProfile                                          # profile ui
@@ -27,7 +29,8 @@ class Dialog(QDialog):
 class MainWindow(QMainWindow):
     def __init__(self, login):
         super(MainWindow, self).__init__()               # init QMainWindow class
-        self.ui = UiMainWindow()                         # main window ui
+        self.main = UiMainWindow()
+        self.ui = self.main                              # main window ui
         self.ui.setupUi(self)                            # setup main window ui
         self.profile = UiProfile()                       # init profile ui
         self.settings = UiSettings()                     # init settings ui
@@ -43,6 +46,7 @@ class MainWindow(QMainWindow):
         self.ui.button.clicked.connect(self.open_menu)        # open menu button
         self.ui.profile.clicked.connect(self.open_profile)    # open profile button
         self.ui.settings.clicked.connect(self.open_settings)  # open settings button
+        self.ui.about.clicked.connect(self.open_about)
 
         # user data dictionary
         self.user_data = {"login": str, "password": str, "email": str, "name": str, "surname": str,
@@ -206,7 +210,7 @@ class MainWindow(QMainWindow):
 
     # returns back to main menu
     def back_to_main(self):
-        self.ui = UiMainWindow()  # change iu to main window
+        self.ui = self.main       # change iu to main window
         self.ui.setupUi(self)     # setup new ui
         MainWindow.setWindowTitle(self, f"{self.user_data['login']}")      # setup window title
         self.ui.hello_title.setText(f"Hello, {self.user_data['login']}!")  # setup hello title
@@ -215,6 +219,7 @@ class MainWindow(QMainWindow):
         self.ui.button.clicked.connect(self.open_menu)        # open menu button
         self.ui.profile.clicked.connect(self.open_profile)    # open profile button
         self.ui.settings.clicked.connect(self.open_settings)  # open settings button
+        self.ui.about.clicked.connect(self.open_about)        # open about button
 
     # exit from account and close app window
     def exit_from_account(self):
@@ -285,7 +290,7 @@ class MainWindow(QMainWindow):
             if filename:
                 mtcnn = MTCNN(image_size=1000, margin=0, min_face_size=20)  # initializing mtcnn for face detection
                 img = Image.open(filename[0])
-                face, prob = mtcnn(img, return_prob=True)                   # returns cropped face and probability
+                face, prob = mtcnn(img, return_prob=True, save_path="user_data/face_photo.png")
                 # if face was not detected or ensurance of network < 95% -> inform user about incorrect photo
                 if face is None or prob < 0.95:
                     self.settings.label.setText(INCORRECT_PHOTO)
@@ -294,7 +299,6 @@ class MainWindow(QMainWindow):
                 else:
                     self.settings.label.setText(OK_PHOTO)
                     self.user_data["face_auth"] = True
-                    copy(filename[0], "user_data/face_photo.png")
                     self.settings.back_button.setEnabled(True)
 
     # back to main menu button pressed
@@ -315,6 +319,20 @@ class MainWindow(QMainWindow):
             except psycopg2.Error as _ex:
                 print("[INFO] database working error")
         self.back_to_main()
+
+#   --- About ---
+    def open_about(self):
+        self.ui = UiAbout()       # change iu to main window
+        self.ui.setupUi(self)     # setup new ui
+        MainWindow.setWindowTitle(self, f"{self.user_data['login']}")      # setup window title
+
+        # reconnect buttons of ui
+        self.ui.back_button.clicked.connect(self.back_to_main)
+        self.ui.github_button.clicked.connect(self.open_github)
+
+    @staticmethod
+    def open_github():
+        QDesktopServices.openUrl(QUrl("https://github.com/shmatozz"))
 
     # loading all user info from database
     def load_data(self, login):
