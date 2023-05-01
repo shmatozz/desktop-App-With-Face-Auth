@@ -4,6 +4,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class UiSignIn(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
+        MainWindow.setWindowIcon(QtGui.QIcon(":/icons/icons/account.svg"))
         MainWindow.resize(500, 700)
         MainWindow.setMinimumSize(QtCore.QSize(500, 700))
         MainWindow.setMaximumSize(QtCore.QSize(500, 700))

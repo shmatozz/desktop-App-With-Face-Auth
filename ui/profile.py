@@ -34,7 +34,7 @@ class UiProfile(object):
         self.user_photo.setStyleSheet("border-radius: 0px;\n"
                                       "border: 2px solid #000000;")
         self.user_photo.setText("")
-        self.user_photo.setPixmap(QtGui.QPixmap(":/icons/icons/person.png"))
+        self.user_photo.setPixmap(QtGui.QPixmap(":/icons/icons/person.svg"))
         self.user_photo.setScaledContents(True)
         self.user_photo.setObjectName("user_photo")
         self.verticalLayout_3.addWidget(self.user_photo)
@@ -319,7 +319,7 @@ class UiProfile(object):
                                       "")
         self.vis_button.setText("")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/icons/icons/view_off.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon.addPixmap(QtGui.QPixmap(":/icons/icons/view_off.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.vis_button.setIcon(icon)
         self.vis_button.setObjectName("vis_button")
         self.horizontalLayout_7.addWidget(self.vis_button)

@@ -18,6 +18,7 @@ class SignIn(QMainWindow):
         self.ui = UiSignIn()            # init sign in ui (current window)
         self.ui.setupUi(self)           # setup sign in ui (current window)
         self.cam = cv2.VideoCapture(0)  # init cam for face auth
+        self.setWindowTitle("Log In")
 
         # connect buttons with methods
         self.ui.SignInButton.clicked.connect(self.signIn)      # sign in account button

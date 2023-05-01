@@ -1,7 +1,7 @@
 import psycopg2                                                           # PostgreSQL working lib
 from PIL import Image                                                     # image class for networks
 from PyQt6 import QtGui, QtCore                                           # PyQt packages
-from PyQt6.QtCore import QPropertyAnimation, QUrl  # PyQt animation
+from PyQt6.QtCore import QPropertyAnimation, QUrl                         # PyQt animation
 from PyQt6.QtGui import QDesktopServices
 from PyQt6.QtWidgets import QMainWindow, QLineEdit, QDialog, QFileDialog  # PyQt ui classes
 from ui.about import UiAbout                                              # about window ui
@@ -62,11 +62,11 @@ class MainWindow(QMainWindow):
         # if current width = 0 -> menu is closed, setup new width for opening animation
         if width == 0:
             new_width = 170
-            self.ui.button.setIcon(QtGui.QIcon(":/icons/icons/arrow_left.png"))
+            self.ui.button.setIcon(QtGui.QIcon(":/icons/icons/arrow_left.svg"))
         # if current width = 170 -> menu is open, setup new width for closing animation
         else:
             new_width = 0
-            self.ui.button.setIcon(QtGui.QIcon(":/icons/icons/menu.png"))
+            self.ui.button.setIcon(QtGui.QIcon(":/icons/icons/menu.svg"))
 
         # init and start animation
         self.animation = QPropertyAnimation(self.ui.slide_menu_cont, b"minimumWidth")
@@ -143,12 +143,12 @@ class MainWindow(QMainWindow):
         if self.profile.password_line.echoMode() == QLineEdit.EchoMode.Password:
             self.profile.password_line.setEchoMode(QLineEdit.EchoMode.Normal)
             self.profile.password2_line.setEchoMode(QLineEdit.EchoMode.Normal)
-            self.profile.vis_button.setIcon(QtGui.QIcon(":/icons/icons/view.png"))
+            self.profile.vis_button.setIcon(QtGui.QIcon(":/icons/icons/view.svg"))
         # if current password line echo mode = normal -> change to password echo mode
         else:
             self.profile.password_line.setEchoMode(QLineEdit.EchoMode.Password)
             self.profile.password2_line.setEchoMode(QLineEdit.EchoMode.Password)
-            self.profile.vis_button.setIcon(QtGui.QIcon(":/icons/icons/view_off.png"))
+            self.profile.vis_button.setIcon(QtGui.QIcon(":/icons/icons/view_off.svg"))
 
     # saving data to users database
     def save_data(self):

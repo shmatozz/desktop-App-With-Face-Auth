@@ -14,6 +14,7 @@ class SignUp(QMainWindow):
         self.ui.setupUi(self)           # setup sign up ui
         self.sign_in = sign_in          # init sign in window to return
         self.face_auth = False          # face auth flag
+        self.setWindowTitle("Sign Up")
 
         # connect buttons with methods
         self.ui.backButton.clicked.connect(self.back)       # back to sign in button

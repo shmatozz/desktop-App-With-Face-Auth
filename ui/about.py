@@ -50,7 +50,7 @@ class UiAbout(object):
                                          "}")
         self.github_button.setText("")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":icons/icons/github.svg"))
+        icon.addPixmap(QtGui.QPixmap(":icons/icons/github_logo.svg"))
         self.github_button.setIcon(icon)
         self.github_button.setIconSize(QtCore.QSize(170, 170))
         self.github_button.setDefault(False)

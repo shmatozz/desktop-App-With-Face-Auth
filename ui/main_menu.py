@@ -8,12 +8,7 @@ class UiMainWindow(object):
         MainWindow.resize(800, 800)
         # set app icon
         app_icon = QtGui.QIcon()
-        app_icon.addFile(":/icons/icons/home.png", QtCore.QSize(8, 8))
-        app_icon.addFile(":/icons/icons/home.png", QtCore.QSize(16, 16))
-        app_icon.addFile(":/icons/icons/home.png", QtCore.QSize(24, 24))
-        app_icon.addFile(":/icons/icons/home.png", QtCore.QSize(32, 32))
-        app_icon.addFile(":/icons/icons/home.png", QtCore.QSize(48, 48))
-        app_icon.addFile(":/icons/icons/home.png", QtCore.QSize(256, 256))
+        app_icon.addFile(":/icons/icons/home.svg")
         MainWindow.setWindowIcon(app_icon)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum)
         sizePolicy.setHorizontalStretch(0)
@@ -46,9 +41,7 @@ class UiMainWindow(object):
         self.slide_menu.setMinimumSize(QtCore.QSize(170, 0))
         self.slide_menu.setMaximumSize(QtCore.QSize(170, 976))
         self.slide_menu.setStyleSheet("background-color: rgb(255, 255, 255);\n"
-                                      "border-radius: 15px;\n"
-                                      "\n"
-                                      "")
+                                      "border-radius: 15px;\n")
         self.slide_menu.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.slide_menu.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.slide_menu.setObjectName("slide_menu")
@@ -247,7 +240,7 @@ class UiMainWindow(object):
                                   "}")
         self.button.setText("")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/icons/icons/menu.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon.addPixmap(QtGui.QPixmap(":/icons/icons/menu.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.button.setIcon(icon)
         self.button.setIconSize(QtCore.QSize(30, 30))
         self.button.setObjectName("button")

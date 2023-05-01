@@ -3,8 +3,9 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 class UiSignUp(object):
     def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
+        MainWindow.setObjectName("Registration")
         MainWindow.resize(500, 700)
+        MainWindow.setWindowIcon(QtGui.QIcon(":/icons/icons/account.svg"))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
