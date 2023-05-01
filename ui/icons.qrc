@@ -1,0 +1,29 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>icons/account.svg</file>
+    <file>icons/arrow_down.svg</file>
+    <file>icons/arrow_left.svg</file>
+    <file>icons/arrow_right.svg</file>
+    <file>icons/arrow_up.svg</file>
+    <file>icons/down.svg</file>
+    <file>icons/exit_X.svg</file>
+    <file>icons/github_logo.svg</file>
+    <file>icons/home.svg</file>
+    <file>icons/info.svg</file>
+    <file>icons/left.svg</file>
+    <file>icons/menu.svg</file>
+    <file>icons/message.svg</file>
+    <file>icons/notification.svg</file>
+    <file>icons/ok_check.svg</file>
+    <file>icons/photo.svg</file>
+    <file>icons/points_menu.svg</file>
+    <file>icons/right.svg</file>
+    <file>icons/settings.svg</file>
+    <file>icons/trash.svg</file>
+    <file>icons/up.svg</file>
+    <file>icons/user_photo.svg</file>
+    <file>icons/view.svg</file>
+    <file>icons/view_off.svg</file>
+    <file>icons/warning.svg</file>
+  </qresource>
+</RCC>

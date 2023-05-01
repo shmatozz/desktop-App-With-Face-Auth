@@ -4,11 +4,11 @@ from ui import icons_rc
 
 class UiMainWindow(object):
     def setupUi(self, MainWindow):
+        icons_rc.qInitResources()
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 800)
-        # set app icon
         app_icon = QtGui.QIcon()
-        app_icon.addFile(":/icons/icons/home.svg")
+        app_icon.addFile(":icons/icons/home.svg")
         MainWindow.setWindowIcon(app_icon)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum)
         sizePolicy.setHorizontalStretch(0)
