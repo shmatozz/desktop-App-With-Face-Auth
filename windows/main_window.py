@@ -1,5 +1,5 @@
 import psycopg2                                                           # PostgreSQL working lib
-from PIL import Image                                                     # image class for networks
+from PIL import Image, ImageDraw                                          # image class for networks
 from PyQt6 import QtGui, QtCore                                           # PyQt packages
 from PyQt6.QtCore import QPropertyAnimation, QUrl                         # PyQt animation
 from PyQt6.QtGui import QDesktopServices
@@ -43,10 +43,7 @@ class MainWindow(QMainWindow):
         self.move(qr.topLeft())                          #
 
         # connect buttons
-        self.ui.button.clicked.connect(self.open_menu)        # open menu button
-        self.ui.profile.clicked.connect(self.open_profile)    # open profile button
-        self.ui.settings.clicked.connect(self.open_settings)  # open settings button
-        self.ui.about.clicked.connect(self.open_about)
+        self.setup_main_buttons()
 
         # user data dictionary
         self.user_data = {"login": str, "password": str, "email": str, "name": str, "surname": str,
@@ -56,24 +53,105 @@ class MainWindow(QMainWindow):
         self.animation = None           # init animation
         self.dialog = None              # init confirm dialog window
 
+    def setup_main_buttons(self):
+        self.ui.button.clicked.connect(self.open_menu)        # open menu button
+        self.ui.profile.clicked.connect(self.open_profile)    # open profile button
+        self.ui.settings.clicked.connect(self.open_settings)  # open settings button
+        self.ui.about.clicked.connect(self.open_about)        # open about button
+        self.ui.close_menu_button.clicked.connect(self.close_menu)    # close menu button
+        self.ui.button_2.clicked.connect(self.open_menu)      # open menu button
+        self.ui.uploadButton.clicked.connect(self.face_auth_test)  # select image and detect face
+
     # open navigation menu
     def open_menu(self):
         width = self.ui.slide_menu_cont.width()     # get current menu width
         # if current width = 0 -> menu is closed, setup new width for opening animation
-        if width == 0:
+        if self.ui.image_output.minimumWidth() != 0:
+            return
+        if width == 60 or width == 0:
+            if width == 0:
+                self.ui.button_2.setMinimumWidth(0)
             new_width = 170
             self.ui.button.setIcon(QtGui.QIcon(":/icons/icons/arrow_left.svg"))
+            # show text on buttons
+            self.ui.menu_label.setMinimumWidth(120)
+            self.ui.profile.setMinimumWidth(150)
+            self.ui.profile.setText(" Profile")
+            self.ui.settings.setMinimumWidth(150)
+            self.ui.settings.setText(" Settings")
+            self.ui.about.setMinimumWidth(150)
+            self.ui.about.setText(" About")
+            self.ui.close_menu_button.setMinimumWidth(100)
+            self.ui.close_menu_button.setText(" Close")
         # if current width = 170 -> menu is open, setup new width for closing animation
         else:
-            new_width = 0
+            new_width = 60
             self.ui.button.setIcon(QtGui.QIcon(":/icons/icons/menu.svg"))
+            # hide text on buttons
+            self.ui.menu_label.setMinimumWidth(0)
+            self.ui.profile.setMinimumWidth(40)
+            self.ui.profile.setText("")
+            self.ui.settings.setMinimumWidth(40)
+            self.ui.settings.setText("")
+            self.ui.about.setMinimumWidth(40)
+            self.ui.about.setText("")
+            self.ui.close_menu_button.setMinimumWidth(40)
+            self.ui.close_menu_button.setText("")
 
         # init and start animation
-        self.animation = QPropertyAnimation(self.ui.slide_menu_cont, b"minimumWidth")
+        self.animation = QPropertyAnimation(self.ui.slide_menu_cont, b"maximumWidth")
         self.animation.setDuration(150)
         self.animation.setStartValue(width)
         self.animation.setEndValue(new_width)
         self.animation.start()
+        self.ui.slide_menu.setMaximumWidth(170)
+
+    # close menu button pressed
+    def close_menu(self):
+        # set menu width = 0
+        self.ui.slide_menu_cont.setMinimumWidth(0)
+        self.ui.slide_menu_cont.setMaximumWidth(0)
+        self.ui.slide_menu.setMaximumWidth(0)
+        self.ui.slide_menu.setMinimumWidth(0)
+        self.ui.button_2.setMinimumWidth(40)
+
+    # upload button pressed -> open upload dialog, detect face on selected image, output
+    def face_auth_test(self):
+        dialog = QFileDialog(self)
+        dialog.setDirectory(r'C:')
+        dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
+        dialog.setNameFilter("Images (*.png *.jpg)")
+        dialog.setViewMode(QFileDialog.ViewMode.List)
+        # if file dialog window closed -> try to check uploaded image
+        if dialog.exec():
+            filename = dialog.selectedFiles()
+            # if any file was selected -> check it for face
+            if filename:
+                mtcnn = MTCNN(keep_all=True)   # init detection model
+                img = Image.open(filename[0])
+                boxes, probs, points = mtcnn.detect(img, landmarks=True)  # get face boxes and probabilities
+                # if any face detected -> mark them on image and output to user
+                if probs[0] is not None:
+                    img_draw = img.copy()
+                    draw = ImageDraw.Draw(img_draw)
+                    for i, (box, point) in enumerate(zip(boxes, points)):
+                        draw.rectangle(box.tolist(), width=5)
+                        for p in point:
+                            draw.rectangle((p - 5).tolist() + (p + 5).tolist(), width=8)
+                    img_draw.save('user_data/detected_faces.png')
+                    # output image on main window
+                    image = QtGui.QPixmap('user_data/detected_faces.png')
+                    if image.width() > 665 or image.height() > 576:
+                        image = image.scaled(665, 576, QtCore.Qt.AspectRatioMode.KeepAspectRatio)
+                    self.ui.image_output.setMinimumWidth(1)
+                    self.ui.image_output.setMaximumWidth(image.width())
+                    self.ui.image_output.setMaximumHeight(image.height())
+                    self.ui.image_output.setStyleSheet("border: 2px solid #000000;\n"
+                                                       "border-radius: 0px;")
+                    self.ui.image_output.setPixmap(image)
+                # if no face detected -> inform user
+                else:
+                    self.ui.image_output.setText("Cannot detect any faces on selected image")
 
 #   -- Profile ---
     # open user profile menu
@@ -216,10 +294,7 @@ class MainWindow(QMainWindow):
         self.ui.hello_title.setText(f"Hello, {self.user_data['login']}!")  # setup hello title
 
         # reconnect buttons of ui
-        self.ui.button.clicked.connect(self.open_menu)        # open menu button
-        self.ui.profile.clicked.connect(self.open_profile)    # open profile button
-        self.ui.settings.clicked.connect(self.open_settings)  # open settings button
-        self.ui.about.clicked.connect(self.open_about)        # open about button
+        self.setup_main_buttons()
 
     # exit from account and close app window
     def exit_from_account(self):
