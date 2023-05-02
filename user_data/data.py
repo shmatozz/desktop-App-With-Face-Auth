@@ -1,0 +1,3 @@
+logged = False
+login = ''
+password = ''
