@@ -80,7 +80,7 @@ class UiMainWindow(object):
                                   "    font: 75 14pt \"Bahnschrift\";\n"
                                   "    color: rgb(120, 183, 140);\n"
                                   "    background-color: rgb(255, 255, 255);\n"
-                                  "    border-radius: 20px;                     /* <----  20px  */ \n"
+                                  "    border-radius: 20px;\n"
                                   "    border: 2px solid #000000;\n"
                                   "}\n"
                                   "\n"
@@ -88,7 +88,7 @@ class UiMainWindow(object):
                                   "    font: 75 14pt \"Bahnschrift\";\n"
                                   "    color: rgb(120, 183, 140);\n"
                                   "    background-color: rgb(239, 239, 239);\n"
-                                  "    border-radius: 20px;                     /* <----  20px  */ \n"
+                                  "    border-radius: 20px;\n"
                                   "    border: 2px solid #000000;\n"
                                   "}")
         self.button.setText("")
@@ -254,7 +254,7 @@ class UiMainWindow(object):
                                              "    font: 75 14pt \"Bahnschrift\";\n"
                                              "    color: rgb(120, 183, 140);\n"
                                              "    background-color: rgb(255, 255, 255);\n"
-                                             "    border-radius: 20px;                     /* <----  20px  */ \n"
+                                             "    border-radius: 20px;\n"
                                              "    border: 2px solid #000000;\n"
                                              "}\n"
                                              "\n"
@@ -262,7 +262,7 @@ class UiMainWindow(object):
                                              "    font: 75 14pt \"Bahnschrift\";\n"
                                              "    color: rgb(120, 183, 140);\n"
                                              "    background-color: rgb(239, 239, 239);\n"
-                                             "    border-radius: 20px;                     /* <----  20px  */ \n"
+                                             "    border-radius: 20px;\n"
                                              "    border: 2px solid #000000;\n"
                                              "}")
         icon4 = QtGui.QIcon()
@@ -312,7 +312,7 @@ class UiMainWindow(object):
                                     "    font: 75 14pt \"Bahnschrift\";\n"
                                     "    color: rgb(120, 183, 140);\n"
                                     "    background-color: rgb(255, 255, 255);\n"
-                                    "    border-radius: 20px;                     /* <----  20px  */ \n"
+                                    "    border-radius: 20px;\n"
                                     "    border: 2px solid #000000;\n"
                                     "}\n"
                                     "\n"
@@ -320,7 +320,7 @@ class UiMainWindow(object):
                                     "    font: 75 14pt \"Bahnschrift\";\n"
                                     "    color: rgb(120, 183, 140);\n"
                                     "    background-color: rgb(239, 239, 239);\n"
-                                    "    border-radius: 20px;                     /* <----  20px  */ \n"
+                                    "    border-radius: 20px;\n"
                                     "    border: 2px solid #000000;\n"
                                     "}")
         self.button_2.setText("")
@@ -386,7 +386,7 @@ class UiMainWindow(object):
         self.upload_frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.upload_frame.setObjectName("upload_frame")
         self.upload_frame.setMinimumSize(QtCore.QSize(0, 100))
-        self.upload_frame.setMaximumSize(QtCore.QSize(680, 100))
+        self.upload_frame.setMaximumSize(QtCore.QSize(800, 100))
         self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.upload_frame)
         self.verticalLayout_7.setObjectName("verticalLayout_7")
         self.uploadButton = QtWidgets.QPushButton(parent=self.upload_frame)

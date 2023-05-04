@@ -76,7 +76,7 @@ class UiAbout(object):
                                        "    color: rgb(120, 183, 140);\n"
                                        "    background-color: rgb(255, 255, 255);\n"
                                        "    border-radius: 10px;\n"
-                                       "    border: 2px solid #094065;\n"
+                                       "    border: 2px solid #000000;\n"
                                        "}\n"
                                        "\n"
                                        "QPushButton:hover{\n"
@@ -84,7 +84,7 @@ class UiAbout(object):
                                        "    color: rgb(255, 255, 255);\n"
                                        "    background-color: rgb(100, 183, 140);\n"
                                        "    border-radius: 10px;\n"
-                                       "    border: 2px solid #094065;\n"
+                                       "    border: 2px solid #000000;\n"
                                        "}\n"
                                        "\n"
                                        "QPushButton:pressed{\n"
@@ -92,7 +92,7 @@ class UiAbout(object):
                                        "    color: rgb(255, 255, 255);\n"
                                        "    background-color: rgb(88, 162, 123);\n"
                                        "    border-radius: 10px;\n"
-                                       "    border: 2px solid #094065;\n"
+                                       "    border: 2px solid #000000;\n"
                                        "}")
         self.back_button.setObjectName("back_button")
         self.horizontalLayout_3.addWidget(self.back_button)
