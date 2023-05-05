@@ -95,6 +95,7 @@ class SignIn(QMainWindow):
                 self.ui.password.setStyleSheet(DEFAULT_LINE_STYLE.replace(BLACK, RED))  # mark password field
         # if only login field entered and face auth is enable -> start face auth
         elif len(login) != 0 and info[1]:
+            self.ui.helloTitle.setText(PROCESSING_FACE_AUTH)
             count_success = self.face_authentication(info)
             # if at least 1 try was successful -> remember current user data and open main window
             if count_success > 0:
