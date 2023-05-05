@@ -1,3 +1,7 @@
+"""
+File that implements all backend methods for Main Menu window.
+"""
+
 import psycopg2                                                           # PostgreSQL working lib
 from PIL import Image, ImageDraw                                          # image class for networks
 from PyQt6 import QtGui, QtCore                                           # PyQt packages
@@ -16,7 +20,13 @@ from facenet_pytorch import MTCNN                                         # netw
 
 # window for asking user ensurance
 class Dialog(QDialog):
+    """
+    Backend of confirm dialog window.
+    """
     def __init__(self, ok, cancel):
+        """
+        Initialization of confirm dialog window.
+        """
         super(Dialog, self).__init__()                                  # init QDialog class
         self.ui = UiConfirm()                                           # init confirm window ui
         self.ui.setupUi(self)                                           # setup ui
@@ -27,7 +37,18 @@ class Dialog(QDialog):
 
 # main window
 class MainWindow(QMainWindow):
+    """
+    Backend of application main window.
+
+    This class implements methods for main menu window working.
+    """
     def __init__(self, login):
+        """
+        Initializing of Main Menu window.
+
+        This method initialize user interface, local variables and connect buttons with methods.
+        :param login: user login used in sign in procedure.
+        """
         super(MainWindow, self).__init__()               # init QMainWindow class
         self.main = UiMainWindow()
         self.ui = self.main                              # main window ui
@@ -54,6 +75,9 @@ class MainWindow(QMainWindow):
         self.dialog = None              # init confirm dialog window
 
     def setup_main_buttons(self):
+        """
+        Set methods for processing button clicks on every ui button.
+        """
         self.ui.button.clicked.connect(self.open_menu)        # open menu button
         self.ui.profile.clicked.connect(self.open_profile)    # open profile button
         self.ui.settings.clicked.connect(self.open_settings)  # open settings button
@@ -64,6 +88,15 @@ class MainWindow(QMainWindow):
 
     # open navigation menu
     def open_menu(self):
+        """
+        Method for changing navigation menu width.
+
+        If menu is open -> close it.
+
+        If menu is half open -> open it fully.
+
+        If menu is fully closed -> open it fully.
+        """
         width = self.ui.slide_menu_cont.width()     # get current menu width
         # if current width = 0 -> menu is closed, setup new width for opening animation
         if self.ui.image_output.minimumWidth() != 0:
@@ -108,6 +141,9 @@ class MainWindow(QMainWindow):
 
     # close menu button pressed
     def close_menu(self):
+        """
+        Method for fully closing navigation menu.
+        """
         # set menu width = 0
         self.ui.slide_menu_cont.setMinimumWidth(0)
         self.ui.slide_menu_cont.setMaximumWidth(0)
@@ -117,6 +153,11 @@ class MainWindow(QMainWindow):
 
     # upload button pressed -> open upload dialog, detect face on selected image, output
     def face_auth_test(self):
+        """
+        Method for processing mouse click on "Upload" button in main menu user interface.
+
+        This method ask user to upload image and then try to detect face. Finally, output result for user.
+        """
         dialog = QFileDialog(self)
         dialog.setDirectory(r'C:')
         dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
@@ -156,6 +197,11 @@ class MainWindow(QMainWindow):
 #   -- Profile ---
     # open user profile menu
     def open_profile(self):
+        """
+        Method for processing mouse click on "Profile" button in navigation menu.
+
+        Method opens user profile interface, connect buttons and paste user info in relevant lines.
+        """
         self.ui = self.profile  # change ui to profile
         self.ui.setupUi(self)   # setup new ui
         MainWindow.setWindowTitle(self, f"{self.user_data['login']}")  # set window title
@@ -176,6 +222,11 @@ class MainWindow(QMainWindow):
 
     # upload profile photo by pressing on user photo
     def eventFilter(self, obj, event):
+        """
+        Method for processing mouse click on "User avatar image" in profile user interface.
+
+        This method ask user to upload new user profile image.
+        """
         # if mouse click on photo icon -> open file dialog to select new photo
         if event.type() == QtCore.QEvent.Type.MouseButtonPress:
             # configure and open file dialog window
@@ -210,6 +261,11 @@ class MainWindow(QMainWindow):
 
     # opens field for entering new password
     def change_password(self):
+        """
+        Method for processing mouse click on "Change password" button in profile user interface.
+
+        This method show in interface fields where user should input new password.
+        """
         self.profile.change_frame.setMinimumHeight(0)       # hide password change button
         self.profile.change_frame.setMaximumHeight(0)       #
         self.profile.password_frame.setMaximumHeight(111)   # show lines for changing password
@@ -217,6 +273,11 @@ class MainWindow(QMainWindow):
 
     # show/hide password
     def toggle_password_visibility(self):
+        """
+        Method for processing mouse click on "Visibility" button in profile user interface.
+
+        This method toggle passwords line echo mode (password/normal).
+        """
         # if current password line echo mode = password (***) -> change to normal echo mode
         if self.profile.password_line.echoMode() == QLineEdit.EchoMode.Password:
             self.profile.password_line.setEchoMode(QLineEdit.EchoMode.Normal)
@@ -230,6 +291,11 @@ class MainWindow(QMainWindow):
 
     # saving data to users database
     def save_data(self):
+        """
+        Method for processing mouse click on "Save" button in profile user interface.
+
+        This method generates dialog window to ask user "Are you sure?" and implements functions of user answer.
+        """
         name = self.profile.name_line.text()              # get new name
         surname = self.profile.surname_line.text()        # get new surname
         email = self.profile.email_line.text()            # get new email
@@ -240,6 +306,11 @@ class MainWindow(QMainWindow):
 
         # if OK pressed in dialog window -> save info to users database
         def ok_pressed():
+            """
+            Function for processing "OK" button in confirm dialog window.
+
+            This function execute SQL command to save input lines in user database.
+            """
             try:
                 connection = self.connect_to_db()    # establish connection to database
                 with connection.cursor() as cursor:  # init cursor to execute PostgreSQL command
@@ -280,6 +351,11 @@ class MainWindow(QMainWindow):
 
         # if CANCEL pressed in dialog window -> close window
         def cancel_pressed():
+            """
+            Function for processing "Cancel" button in confirm dialog window.
+
+            This function just close dialog window.
+            """
             self.dialog.close()  # close confirm dialog window
 
         # open dialog window
@@ -288,6 +364,11 @@ class MainWindow(QMainWindow):
 
     # returns back to main menu
     def back_to_main(self):
+        """
+        Method for processing "Back" button in profile user interface.
+
+        This method change user interface and connect buttons for main menu.
+        """
         self.ui = self.main       # change iu to main window
         self.ui.setupUi(self)     # setup new ui
         MainWindow.setWindowTitle(self, f"{self.user_data['login']}")      # setup window title
@@ -298,8 +379,18 @@ class MainWindow(QMainWindow):
 
     # exit from account and close app window
     def exit_from_account(self):
+        """
+        Method for processing mouse click on "Exit" button in profile user interface.
+
+        This method generates dialog window to ask user "Are you sure?" and implements functions of user answer.
+        """
         # if OK pressed in dialog window -> exit from user account
         def ok_pressed():
+            """
+            Function for processing "OK" button in confirm dialog window.
+
+            This function exit from user account and close application window.
+            """
             self.dialog.close()
             # rewrite user data login file not auto log in next time
             with open("user_data/data.py", "w") as datafile:
@@ -310,6 +401,11 @@ class MainWindow(QMainWindow):
 
         # if CANCEL pressed in dialog window -> close window
         def cancel_pressed():
+            """
+            Function for processing "Cancel" button in confirm dialog window.
+
+            This function just close dialog window.
+            """
             self.dialog.close()
 
         self.dialog = Dialog(ok_pressed, cancel_pressed)  # init dialog window
@@ -318,6 +414,11 @@ class MainWindow(QMainWindow):
 #   --- Settings ---
     # open settings menu
     def open_settings(self):
+        """
+        Method for processing mouse click on "Settings" button in navigation menu.
+
+        Method opens settings interface and connect buttons of settings menu.
+        """
         self.ui = self.settings  # change ui to settings
         self.ui.setupUi(self)    #
         MainWindow.setWindowTitle(self, f"{self.user_data['login']}")  # set window title
@@ -335,6 +436,13 @@ class MainWindow(QMainWindow):
 
     # face auth button pressed
     def toggle_face_auth(self):
+        """
+        Method for processing mouse click on checkbox "Face authentication" in settings menu.
+
+        If it is now enabled -> open upload button for user.
+
+        If it is now disabled -> set up face auth flag = false.
+        """
         self.settings_changed = True
         # if face auth now enabled -> open upload button for user with animation
         if self.settings.enable_button.isChecked():
@@ -352,6 +460,11 @@ class MainWindow(QMainWindow):
 
     # upload button pressed
     def upload_face(self):
+        """
+        Method for processing mouse click on "Upload" button in settings menu.
+
+        Ask user to select image with his face, try to construct user face pattern from selected image.
+        """
         # configure and open file dialog window
         dialog = QFileDialog(self)
         dialog.setDirectory(r'C:')
@@ -378,6 +491,13 @@ class MainWindow(QMainWindow):
 
     # back to main menu button pressed
     def save_and_back(self):
+        """
+        Method for processing mouse click on "Back" button in settings menu.
+
+        If some settings changed -> save data to user database.
+
+        Returns user back to main menu.
+        """
         # if settings changed flag was marked -> save changes to database
         if self.settings_changed:
             try:
@@ -397,6 +517,11 @@ class MainWindow(QMainWindow):
 
 #   --- About ---
     def open_about(self):
+        """
+        Method for processing mouse click on "About" button in navigation menu.
+
+        Method opens about interface and connect buttons of about menu.
+        """
         self.ui = UiAbout()       # change iu to main window
         self.ui.setupUi(self)     # setup new ui
         MainWindow.setWindowTitle(self, f"{self.user_data['login']}")      # setup window title
@@ -407,10 +532,21 @@ class MainWindow(QMainWindow):
 
     @staticmethod
     def open_github():
-        QDesktopServices.openUrl(QUrl("https://github.com/shmatozz"))
+        """
+        Method for processing mouse click on GitHub icon in about menu.
+
+        Open GitHub repository of project.
+        """
+        QDesktopServices.openUrl(QUrl("https://github.com/shmatozz/desktop-App-With-Face-Auth"))
 
     # loading all user info from database
     def load_data(self, login):
+        """
+        Method for get user information from database.
+
+        Called in __init__ method.
+        :param login: user login used to sign in app.
+        """
         try:
             connect = self.connect_to_db()
             with connect.cursor() as cursor:
@@ -449,6 +585,9 @@ class MainWindow(QMainWindow):
     # establish connection to database
     @staticmethod
     def connect_to_db():
+        """
+        Establish connection with users database.
+        """
         return psycopg2.connect(host="127.0.0.1",
                                 user="postgres",
                                 password="1234567890",

@@ -1,3 +1,7 @@
+"""
+File that implements all backend methods for Sign In window.
+"""
+
 import psycopg2                             # PostgreSQL working lib
 import cv2                                  # camera capture lib
 from torch import dist                      # distance between two photo tensors
@@ -11,7 +15,17 @@ from facenet_pytorch import MTCNN, InceptionResnetV1  # networks for face auth
 
 
 class SignIn(QMainWindow):
+    """
+    Backend of sign in window.
+
+    This class implements methods for Sign In window working.
+    """
     def __init__(self):
+        """
+        Initializing of Sign In window.
+
+        This method initialize user interface and connect buttons with methods.
+        """
         super(SignIn, self).__init__()  # init QMainWindow class
         self.sign_up = None             # init sign up window for opening
         self.main = None                # init main window for opening
@@ -21,11 +35,19 @@ class SignIn(QMainWindow):
         self.setWindowTitle("Log In")
 
         # connect buttons with methods
-        self.ui.SignInButton.clicked.connect(self.signIn)      # sign in account button
-        self.ui.SignUpButton.clicked.connect(self.openSignUp)  # open sign up window button
+        self.ui.SignInButton.clicked.connect(self.sign_in)      # sign in account button
+        self.ui.SignUpButton.clicked.connect(self.open_sign_up)  # open sign up window button
 
     # sign in account button pressed
-    def signIn(self):
+    def sign_in(self):
+        """
+        Method for processing mouse click on "Sign In" button in user interface.
+
+        This method get user data from input fields or camera (in case of face authentication) and execute
+        database to check matches.
+
+        If some fields are missed -> mark them with red.
+        """
         # cleaning styles of input fields
         self.reset_styles()
 
@@ -66,36 +88,14 @@ class SignIn(QMainWindow):
                         datafile.write(f"logged = True\nlogin = '{login}'\npassword = '{password}'\n")
                         datafile.truncate()
 
-                self.close()                   # close sign in window
-                self.main = MainWindow(login)  # init main window
-                self.main.show()               # show main window
+                self.open_main_window(login)
             # if database password != input password
             else:
                 self.ui.helloTitle.setText(WRONG_PASSWORD)                              # inform user
                 self.ui.password.setStyleSheet(DEFAULT_LINE_STYLE.replace(BLACK, RED))  # mark password field
         # if only login field entered and face auth is enable -> start face auth
         elif len(login) != 0 and info[1]:
-            with open("user_data/face_photo.png", "wb") as photo:  # binary write database photo to current user data
-                photo.write(info[2])
-            mtcnn = MTCNN(image_size=1000, margin=0, min_face_size=20)     # init mtcnn for face detection
-            resnet = InceptionResnetV1(pretrained='vggface2').eval()      # init resnet for face to embedding conversion
-            face_database = mtcnn(Image.open("user_data/face_photo.png"))  # pass face from user database
-            emb_database = resnet(face_database.unsqueeze(0)).detach()     # get embedding matrix
-            count_trys = 0                                                 # init try count of face auth
-            count_success = 0                                              # init successful try count of face auth
-            while count_trys < 2:
-                result, image = self.cam.read()                            # get image from camera
-                cv2.imwrite("user_data/face_photo.png", image)             # write image to user face
-                face_current = mtcnn(Image.open("user_data/face_photo.png"))  # get cropped face of user
-                # if face was detected on image -> calculate distance with database face
-                if face_current is not None:
-                    emb_current = resnet(face_current.unsqueeze(0)).detach()  # get embedding matrix
-                    distance = dist(emb_current, emb_database).item()         # calculate distance
-                    print(distance)
-                    # if distance is rather small -> inc success count
-                    if distance < 0.45:
-                        count_success += 1
-                count_trys += 1
+            count_success = self.face_authentication(info)
             # if at least 1 try was successful -> remember current user data and open main window
             if count_success > 0:
                 # if user press remember me flag -> remember user data
@@ -105,9 +105,7 @@ class SignIn(QMainWindow):
                         datafile.write(f"logged = True\nlogin = '{login}'\npassword = '{info[0]}'\n")
                         datafile.truncate()
                 self.cam.release()             # close camera
-                self.close()                   # close sign in window
-                self.main = MainWindow(login)  # init main window
-                self.main.show()               # open main window
+                self.open_main_window(login)
             # if no successful try -> inform user
             else:
                 self.ui.helloTitle.setText(TRY_AGAIN_OR_PASSWORD)
@@ -116,14 +114,59 @@ class SignIn(QMainWindow):
             self.ui.helloTitle.setText(MISSING_REQUIRED_FIELDS)  # inform user
             self.ui.password.setStyleSheet(DEFAULT_LINE_STYLE.replace(BLACK, RED))  # mark empty field
 
+    def face_authentication(self, info):
+        """
+        Check user face with face patten from database.
+
+        :param info: Array of user data received from database by entered login.
+        :return: Count of successful trys in faces match.
+        """
+        with open("user_data/face_photo.png", "wb") as photo:  # binary write database photo to current user data
+            photo.write(info[2])
+        mtcnn = MTCNN(image_size=1000, margin=0, min_face_size=20)        # init mtcnn for face detection
+        resnet = InceptionResnetV1(pretrained='vggface2').eval()          # init resnet for face to embedding conversion
+        face_database = mtcnn(Image.open("user_data/face_photo.png"))     # pass face from user database
+        emb_database = resnet(face_database.unsqueeze(0)).detach()        # get embedding matrix
+        count_trys = 0                                                    # init try count of face auth
+        count_success = 0                                                 # init successful try count of face auth
+        while count_trys < 2 and count_success == 0:
+            result, image = self.cam.read()                               # get image from camera
+            cv2.imwrite("user_data/face_photo.png", image)                # write image to user face
+            face_current = mtcnn(Image.open("user_data/face_photo.png"))  # get cropped face of user
+            # if face was detected on image -> calculate distance with database face
+            if face_current is not None:
+                emb_current = resnet(face_current.unsqueeze(0)).detach()  # get embedding matrix
+                distance = dist(emb_current, emb_database).item()         # calculate distance
+                print(distance)
+                # if distance is rather small -> inc success count
+                if distance < 0.45:
+                    count_success += 1
+            count_trys += 1
+
+        return count_success
+
     # sign up button pressed
-    def openSignUp(self):
+    def open_sign_up(self):
+        """
+        Open window for user registration.
+        """
         self.close()                 # close sign in window
         self.sign_up = SignUp(self)  # init sign up window
         self.sign_up.show()          # show sign up window
 
+    def open_main_window(self, login):
+        """
+        Open main window of application.
+        """
+        self.close()                   # close sign in window
+        self.main = MainWindow(login)  # init main window
+        self.main.show()               # open main window
+
     # reset styles method
     def reset_styles(self):
+        """
+        Reset input lines styles. This method called to recolor fields after error output.
+        """
         self.ui.login.setStyleSheet(DEFAULT_LINE_STYLE)        # reset login styles
         self.ui.password.setStyleSheet(DEFAULT_LINE_STYLE)     # reset password styles
         self.ui.helloTitle.setStyleSheet(DEFAULT_TITLE_STYLE)  # reset title styles
@@ -131,6 +174,7 @@ class SignIn(QMainWindow):
     # establish database connection
     @staticmethod
     def connect_to_db():
+        """ Establish connection with users database. """
         return psycopg2.connect(host="127.0.0.1",       # local host address
                                 user="postgres",        # username
                                 password="1234567890",  # user password

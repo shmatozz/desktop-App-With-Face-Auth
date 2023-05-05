@@ -1,3 +1,7 @@
+"""
+File that implements all backend methods for Sign Up window.
+"""
+
 import psycopg2                                       # PostgreSQL working lib
 from PyQt6.QtWidgets import QMainWindow, QFileDialog  # PyQt classes for inheritance
 from ui.sign_up import UiSignUp                    # sign up ui
@@ -8,7 +12,17 @@ from shutil import copy                               # function for copying pho
 
 
 class SignUp(QMainWindow):
+    """
+    Backend of Sign Up window.
+
+    This class implements methods for Sign Up window working.
+    """
     def __init__(self, sign_in):
+        """
+        Initializing of Sign Up window.
+
+        This method initialize user interface and connect buttons with methods.
+        """
         super(SignUp, self).__init__()  # init QMainWindow class
         self.ui = UiSignUp()            # init sign up ui
         self.ui.setupUi(self)           # setup sign up ui
@@ -23,6 +37,13 @@ class SignUp(QMainWindow):
 
     # sign up button pressed
     def sign_up(self):
+        """
+        Method for processing mouse click on "Sign Up" button in user interface.
+
+        This method get user data from input fields and create new user in database of users.
+
+        If some fields are missed -> mark them with red.
+        """
         # cleaning styles
         self.reset_styles()
 
@@ -85,6 +106,11 @@ class SignUp(QMainWindow):
 
     # upload photo button pressed
     def upload(self):
+        """
+        Method for uploading image for creating user face pattern.
+
+        If user upload face in registration -> face authentication will be available instantly.
+        """
         dialog = QFileDialog(self)                             # init select file dialog window
         dialog.setDirectory(r'C:')                             # set default directory
         dialog.setFileMode(QFileDialog.FileMode.ExistingFile)  # set file mod
@@ -109,11 +135,17 @@ class SignUp(QMainWindow):
 
     # back to sign in button pressed
     def back(self):
+        """
+        Returns back to Sign In window.
+        """
         self.close()         # close sign up window
         self.sign_in.show()  # show sign in window
 
     # reset styles method
     def reset_styles(self):
+        """
+        Reset input lines styles. This method called to recolor fields after error output.
+        """
         self.ui.name.setStyleSheet(DEFAULT_LINE_STYLE)         # reset name field
         self.ui.login.setStyleSheet(DEFAULT_LINE_STYLE)        # reset login field
         self.ui.password.setStyleSheet(DEFAULT_LINE_STYLE)     # reset password field
@@ -122,6 +154,9 @@ class SignUp(QMainWindow):
     # establish database connection
     @staticmethod
     def connect_to_db():
+        """
+        Establish connection with users database.
+        """
         return psycopg2.connect(host="127.0.0.1",       # local host address
                                 user="postgres",        # username
                                 password="1234567890",  # password

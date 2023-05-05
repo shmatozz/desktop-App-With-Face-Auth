@@ -1,3 +1,7 @@
+"""
+File that contains all text recourses for output errors or changing styles of user interface.
+"""
+
 # style presets
 DEFAULT_LINE_STYLE = "color: rgb(0, 0, 0);\n" \
                      "background-color: rgb(255, 255, 255);\n" \
