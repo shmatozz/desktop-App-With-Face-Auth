@@ -35,7 +35,7 @@
   <body>
     
     <script>
-      document.body.dataset.theme = "light";
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
     </script>
     
 
