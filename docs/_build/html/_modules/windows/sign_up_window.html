@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>windows.sign_up_window &mdash; Desktop Application with Face Authentication 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Desktop Application with Face Authentication
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">desktop-App-With-Face-Auth</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Desktop Application with Face Authentication</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">windows.sign_up_window</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for windows.sign_up_window</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">File that implements all methods for Sign Up window correct working.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">psycopg2</span>                                       <span class="c1"># PostgreSQL working lib</span>
+<span class="kn">from</span> <span class="nn">PyQt6.QtWidgets</span> <span class="kn">import</span> <span class="n">QMainWindow</span><span class="p">,</span> <span class="n">QFileDialog</span>  <span class="c1"># PyQt classes for inheritance</span>
+<span class="kn">from</span> <span class="nn">ui.sign_up</span> <span class="kn">import</span> <span class="n">UiSignUp</span>                       <span class="c1"># sign up ui</span>
+<span class="kn">from</span> <span class="nn">windows.styles</span> <span class="kn">import</span> <span class="o">*</span>                          <span class="c1"># window styles and resources</span>
+<span class="kn">from</span> <span class="nn">facenet_pytorch</span> <span class="kn">import</span> <span class="n">MTCNN</span>                     <span class="c1"># network for face detection</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>                                 <span class="c1"># image class for networks</span>
+<span class="kn">from</span> <span class="nn">shutil</span> <span class="kn">import</span> <span class="n">copy</span>                               <span class="c1"># function for copying photos</span>
+
+
+<div class="viewcode-block" id="SignUp"><a class="viewcode-back" href="../../windows.html#windows.sign_up_window.SignUp">[docs]</a><span class="k">class</span> <span class="nc">SignUp</span><span class="p">(</span><span class="n">QMainWindow</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Backend of Sign Up window.</span>
+
+<span class="sd">    This class implements methods for Sign Up window working.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sign_in</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializing of Sign Up window.</span>
+
+<span class="sd">        This method initialize user interface and connect buttons with methods.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SignUp</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>  <span class="c1"># init QMainWindow class</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span> <span class="o">=</span> <span class="n">UiSignUp</span><span class="p">()</span>            <span class="c1"># init sign up ui</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>           <span class="c1"># setup sign up ui</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sign_in</span> <span class="o">=</span> <span class="n">sign_in</span>          <span class="c1"># init sign in window to return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">face_auth</span> <span class="o">=</span> <span class="kc">False</span>          <span class="c1"># face auth flag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Sign Up&quot;</span><span class="p">)</span>
+
+        <span class="c1"># connect buttons with methods</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">backButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">back</span><span class="p">)</span>       <span class="c1"># back to sign in button</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">SingUpButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sign_up</span><span class="p">)</span>  <span class="c1"># sign up button</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">uploadButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upload</span><span class="p">)</span>   <span class="c1"># upload photo button</span>
+
+    <span class="c1"># sign up button pressed</span>
+<div class="viewcode-block" id="SignUp.sign_up"><a class="viewcode-back" href="../../windows.html#windows.sign_up_window.SignUp.sign_up">[docs]</a>    <span class="k">def</span> <span class="nf">sign_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method for processing mouse click on &quot;Sign Up&quot; button in user interface.</span>
+
+<span class="sd">        This method get user data from input fields and create new user in database of users.</span>
+
+<span class="sd">        If some fields are missed -&gt; mark them with red.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># cleaning styles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_styles</span><span class="p">()</span>
+
+        <span class="c1"># get fields text</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>                 <span class="c1"># name</span>
+        <span class="n">surname</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">surname</span><span class="o">.</span><span class="n">text</span><span class="p">()</span><span class="si">}</span><span class="se">\&#39;</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">surname</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="k">else</span> <span class="s1">&#39;null&#39;</span>  <span class="c1"># set &#39;null&#39;</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">email</span><span class="o">.</span><span class="n">text</span><span class="p">()</span><span class="si">}</span><span class="se">\&#39;</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">email</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="k">else</span> <span class="s1">&#39;null&#39;</span>        <span class="c1"># if field is empty</span>
+        <span class="n">login</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">login</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>               <span class="c1"># login</span>
+        <span class="n">password</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">password</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>         <span class="c1"># password</span>
+        <span class="n">rep_password</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">passwordRep</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>  <span class="c1"># repeat password</span>
+
+        <span class="c1"># if required fields are NOT missed -&gt; try to create user account</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">login</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">password</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">rep_password</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># if passwords are not equal -&gt; highlight password fields</span>
+            <span class="k">if</span> <span class="n">password</span> <span class="o">!=</span> <span class="n">rep_password</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">RegistrationTitle</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">NOT_EQUAL_PASSWORDS</span><span class="p">)</span>                     <span class="c1"># inform user</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">password</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="n">DEFAULT_LINE_STYLE</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">BLACK</span><span class="p">,</span> <span class="n">RED</span><span class="p">))</span>     <span class="c1"># mark password field</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">passwordRep</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="n">DEFAULT_LINE_STYLE</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">BLACK</span><span class="p">,</span> <span class="n">RED</span><span class="p">))</span>  <span class="c1"># mark repeat password field</span>
+            <span class="c1"># if passwords ok -&gt; try to connect to user database</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">connection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connect_to_db</span><span class="p">()</span>    <span class="c1"># establish connection</span>
+                    <span class="k">with</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cursor</span><span class="p">:</span>  <span class="c1"># init cursor to execute PostgreSQL command</span>
+                        <span class="c1"># execute PostgreSQL command (select login)</span>
+                        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;select login from users where login = &#39;</span><span class="si">{</span><span class="n">login</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+                        <span class="n">user_login</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>   <span class="c1"># receive query result</span>
+                        <span class="c1"># if entered login already in database -&gt; output info and highlight login field</span>
+                        <span class="k">if</span> <span class="n">user_login</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">RegistrationTitle</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">OCCUPIED_LOGIN</span><span class="p">)</span>                    <span class="c1"># inform user</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">login</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="n">DEFAULT_LINE_STYLE</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">BLACK</span><span class="p">,</span> <span class="n">RED</span><span class="p">))</span>  <span class="c1"># mark login field</span>
+                        <span class="c1"># if everything is OK -&gt; add new user to owr database</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="c1"># if face auth flag = True -&gt; add new user with face photo</span>
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">face_auth</span><span class="p">:</span>
+                                <span class="c1"># execute PostgreSQL command (insert user info)</span>
+                                <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;insert into users (user_name, surname, email, login, password, &quot;</span>
+                                               <span class="sa">f</span><span class="s2">&quot;enable_face_auth, user_face) &quot;</span>
+                                               <span class="sa">f</span><span class="s2">&quot;values (&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;, </span><span class="si">{</span><span class="n">surname</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">email</span><span class="si">}</span><span class="s2">, &#39;</span><span class="si">{</span><span class="n">login</span><span class="si">}</span><span class="s2">&#39;, &#39;</span><span class="si">{</span><span class="n">password</span><span class="si">}</span><span class="s2">&#39;, &quot;</span>
+                                               <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">face_auth</span><span class="si">}</span><span class="s2">, &quot;</span>
+                                               <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">psycopg2</span><span class="o">.</span><span class="n">Binary</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;user_data/face_photo.png&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+                            <span class="c1"># if face auth flag = False -&gt; add user without face photo</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="c1"># execute PostgreSQL command (insert user info)</span>
+                                <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;insert into users (user_name, surname, email, login, password) &quot;</span>
+                                               <span class="sa">f</span><span class="s2">&quot;values (&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;, </span><span class="si">{</span><span class="n">surname</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">email</span><span class="si">}</span><span class="s2">, &#39;</span><span class="si">{</span><span class="n">login</span><span class="si">}</span><span class="s2">&#39;, &#39;</span><span class="si">{</span><span class="n">password</span><span class="si">}</span><span class="s2">&#39;)&quot;</span><span class="p">)</span>
+                            <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>  <span class="c1"># save changes in database</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">back</span><span class="p">()</span>          <span class="c1"># return to sign in window</span>
+
+                        <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>       <span class="c1"># close connection to database</span>
+                <span class="c1"># processing database errors</span>
+                <span class="k">except</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO] database work error&quot;</span><span class="p">)</span>
+
+        <span class="c1"># if required fields are missed -&gt; highlight missed fields</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">RegistrationTitle</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">MISSING_REQUIRED_FIELDS</span><span class="p">)</span>  <span class="c1"># inform user</span>
+            <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">login</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">password</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">passwordRep</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">text</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">field</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="n">DEFAULT_LINE_STYLE</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">BLACK</span><span class="p">,</span> <span class="n">RED</span><span class="p">))</span>  <span class="c1"># mark field if length = 0</span></div>
+
+    <span class="c1"># upload photo button pressed</span>
+<div class="viewcode-block" id="SignUp.upload"><a class="viewcode-back" href="../../windows.html#windows.sign_up_window.SignUp.upload">[docs]</a>    <span class="k">def</span> <span class="nf">upload</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method for uploading image for creating user face pattern.</span>
+
+<span class="sd">        If user upload face in registration -&gt; face authentication will be available instantly.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dialog</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>                             <span class="c1"># init select file dialog window</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">setDirectory</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;C:&#39;</span><span class="p">)</span>                             <span class="c1"># set default directory</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">setFileMode</span><span class="p">(</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">FileMode</span><span class="o">.</span><span class="n">ExistingFile</span><span class="p">)</span>  <span class="c1"># set file mod</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">setNameFilter</span><span class="p">(</span><span class="s2">&quot;Images (*.png *.jpg)&quot;</span><span class="p">)</span>           <span class="c1"># set filename filter (only .png, .jpg)</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">setViewMode</span><span class="p">(</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">ViewMode</span><span class="o">.</span><span class="n">List</span><span class="p">)</span>          <span class="c1"># set view mode</span>
+        <span class="c1"># if dialog window closed -&gt; process selected photo</span>
+        <span class="k">if</span> <span class="n">dialog</span><span class="o">.</span><span class="n">exec</span><span class="p">():</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">selectedFiles</span><span class="p">()</span>                  <span class="c1"># get path of selected file</span>
+            <span class="c1"># if any file was selected -&gt; try to detect face</span>
+            <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
+                <span class="n">mtcnn</span> <span class="o">=</span> <span class="n">MTCNN</span><span class="p">(</span><span class="n">image_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">min_face_size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>  <span class="c1"># initializing mtcnn for face detection</span>
+                <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>                  <span class="c1"># open selected photo</span>
+                <span class="n">face</span><span class="p">,</span> <span class="n">prob</span> <span class="o">=</span> <span class="n">mtcnn</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">return_prob</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>      <span class="c1"># pass photo to mtcnn</span>
+                <span class="c1"># if no face detected or confidence of network &lt; 95% -&gt; inform user of incorrect photo</span>
+                <span class="k">if</span> <span class="n">face</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">prob</span> <span class="o">&lt;</span> <span class="mf">0.95</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">uploadMes</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">INCORRECT_PHOTO</span><span class="p">)</span>  <span class="c1"># inform user</span>
+                <span class="c1"># if face detected -&gt; copy selected photo to user data</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">uploadMes</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">OK_PHOTO</span><span class="p">)</span>        <span class="c1"># inform user</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">face_auth</span> <span class="o">=</span> <span class="kc">True</span>                      <span class="c1"># set face auth flag = True</span>
+                    <span class="n">copy</span><span class="p">(</span><span class="n">filename</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;user_data/face_photo.png&quot;</span><span class="p">)</span>  <span class="c1"># copy photo to user data</span></div>
+
+    <span class="c1"># back to sign in button pressed</span>
+<div class="viewcode-block" id="SignUp.back"><a class="viewcode-back" href="../../windows.html#windows.sign_up_window.SignUp.back">[docs]</a>    <span class="k">def</span> <span class="nf">back</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns back to Sign In window.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>         <span class="c1"># close sign up window</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sign_in</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>  <span class="c1"># show sign in window</span></div>
+
+    <span class="c1"># reset styles method</span>
+<div class="viewcode-block" id="SignUp.reset_styles"><a class="viewcode-back" href="../../windows.html#windows.sign_up_window.SignUp.reset_styles">[docs]</a>    <span class="k">def</span> <span class="nf">reset_styles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reset input lines styles. This method called to recolor fields after error output.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="n">DEFAULT_LINE_STYLE</span><span class="p">)</span>         <span class="c1"># reset name field</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">login</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="n">DEFAULT_LINE_STYLE</span><span class="p">)</span>        <span class="c1"># reset login field</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">password</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="n">DEFAULT_LINE_STYLE</span><span class="p">)</span>     <span class="c1"># reset password field</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">passwordRep</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="n">DEFAULT_LINE_STYLE</span><span class="p">)</span>  <span class="c1"># reset repeat password field</span></div>
+
+    <span class="c1"># establish database connection</span>
+<div class="viewcode-block" id="SignUp.connect_to_db"><a class="viewcode-back" href="../../windows.html#windows.sign_up_window.SignUp.connect_to_db">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">connect_to_db</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Establish connection with users database.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span>       <span class="c1"># local host address</span>
+                                <span class="n">user</span><span class="o">=</span><span class="s2">&quot;postgres&quot;</span><span class="p">,</span>        <span class="c1"># username</span>
+                                <span class="n">password</span><span class="o">=</span><span class="s2">&quot;1234567890&quot;</span><span class="p">,</span>  <span class="c1"># password</span>
+                                <span class="n">database</span><span class="o">=</span><span class="s2">&quot;app_users&quot;</span><span class="p">)</span>   <span class="c1"># database name</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Matvey Baryshev.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

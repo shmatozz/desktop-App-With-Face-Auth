@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>windows.main_window &mdash; Desktop Application with Face Authentication 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Desktop Application with Face Authentication
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">desktop-App-With-Face-Auth</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Desktop Application with Face Authentication</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">windows.main_window</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for windows.main_window</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">File that implements all methods for Main Menu window correct working.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">psycopg2</span>                                                           <span class="c1"># PostgreSQL working lib</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageDraw</span>                                          <span class="c1"># image class for networks</span>
+<span class="kn">from</span> <span class="nn">PyQt6.QtCore</span> <span class="kn">import</span> <span class="n">QPropertyAnimation</span><span class="p">,</span> <span class="n">QUrl</span><span class="p">,</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QEvent</span>             <span class="c1"># PyQt</span>
+<span class="kn">from</span> <span class="nn">PyQt6.QtGui</span> <span class="kn">import</span> <span class="n">QDesktopServices</span><span class="p">,</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QPixmap</span>
+<span class="kn">from</span> <span class="nn">PyQt6.QtWidgets</span> <span class="kn">import</span> <span class="n">QMainWindow</span><span class="p">,</span> <span class="n">QLineEdit</span><span class="p">,</span> <span class="n">QDialog</span><span class="p">,</span> <span class="n">QFileDialog</span>  <span class="c1"># PyQt ui classes</span>
+<span class="kn">from</span> <span class="nn">ui.about</span> <span class="kn">import</span> <span class="n">UiAbout</span>                                              <span class="c1"># about window ui</span>
+<span class="kn">from</span> <span class="nn">ui.confirm_dialog</span> <span class="kn">import</span> <span class="n">UiConfirm</span>                                   <span class="c1"># confirm window ui</span>
+<span class="kn">from</span> <span class="nn">ui.main_menu</span> <span class="kn">import</span> <span class="n">UiMainWindow</span>                                     <span class="c1"># main window ui</span>
+<span class="kn">from</span> <span class="nn">ui.profile</span> <span class="kn">import</span> <span class="n">UiProfile</span>                                          <span class="c1"># profile ui</span>
+<span class="kn">from</span> <span class="nn">ui.settings</span> <span class="kn">import</span> <span class="n">UiSettings</span>                                        <span class="c1"># settings ui</span>
+<span class="kn">from</span> <span class="nn">windows.styles</span> <span class="kn">import</span> <span class="o">*</span>                                              <span class="c1"># window styles and resources</span>
+<span class="kn">from</span> <span class="nn">shutil</span> <span class="kn">import</span> <span class="n">copy</span>                                                   <span class="c1"># function for copying photos</span>
+<span class="kn">from</span> <span class="nn">facenet_pytorch</span> <span class="kn">import</span> <span class="n">MTCNN</span>                                         <span class="c1"># network for face detection</span>
+
+
+<span class="c1"># window for asking user ensurance</span>
+<div class="viewcode-block" id="Dialog"><a class="viewcode-back" href="../../windows.html#windows.main_window.Dialog">[docs]</a><span class="k">class</span> <span class="nc">Dialog</span><span class="p">(</span><span class="n">QDialog</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Backend of confirm dialog window.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ok</span><span class="p">,</span> <span class="n">cancel</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialization of confirm dialog window.</span>
+<span class="sd">        :param ok: function that connects to &quot;OK&quot; button.</span>
+<span class="sd">        :param cancel: function that connects to &quot;Cancel&quot; button.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Dialog</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>                                  <span class="c1"># init QDialog class</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span> <span class="o">=</span> <span class="n">UiConfirm</span><span class="p">()</span>                                           <span class="c1"># init confirm window ui</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>                                           <span class="c1"># setup ui</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">ok_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">ok</span><span class="p">)</span>                           <span class="c1"># connect ok button</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cancel_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">cancel</span><span class="p">)</span>                   <span class="c1"># connect cancel button</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowFlags</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">WindowType</span><span class="o">.</span><span class="n">FramelessWindowHint</span><span class="p">)</span>   <span class="c1"># set window type to hide title bar</span></div>
+
+
+<span class="c1"># main window</span>
+<div class="viewcode-block" id="MainWindow"><a class="viewcode-back" href="../../windows.html#windows.main_window.MainWindow">[docs]</a><span class="k">class</span> <span class="nc">MainWindow</span><span class="p">(</span><span class="n">QMainWindow</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Backend of Main Menu window.</span>
+
+<span class="sd">    This class implements methods for main menu window working.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">login</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializing of Main Menu window.</span>
+
+<span class="sd">        This method initialize user interface, local variables and connect buttons with methods.</span>
+<span class="sd">        :param login: user login used in sign in procedure.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MainWindow</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>               <span class="c1"># init QMainWindow class</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main</span> <span class="o">=</span> <span class="n">UiMainWindow</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main</span>                              <span class="c1"># main window ui</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>                            <span class="c1"># setup main window ui</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="n">UiProfile</span><span class="p">()</span>                       <span class="c1"># init profile ui</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span> <span class="o">=</span> <span class="n">UiSettings</span><span class="p">()</span>                     <span class="c1"># init settings ui</span>
+        <span class="n">MainWindow</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">login</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>      <span class="c1"># set window title as user login</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">hello_title</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hello, </span><span class="si">{</span><span class="n">login</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">)</span>  <span class="c1"># set user greeting title</span>
+        <span class="c1"># positioning window in the center of the screen</span>
+        <span class="n">qr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frameGeometry</span><span class="p">()</span>                        <span class="c1"># get window size</span>
+        <span class="n">cp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">()</span><span class="o">.</span><span class="n">availableGeometry</span><span class="p">()</span><span class="o">.</span><span class="n">center</span><span class="p">()</span>  <span class="c1"># get center of screen</span>
+        <span class="n">qr</span><span class="o">.</span><span class="n">moveCenter</span><span class="p">(</span><span class="n">cp</span><span class="p">)</span>                                <span class="c1"># move window to the center</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">qr</span><span class="o">.</span><span class="n">topLeft</span><span class="p">())</span>                          <span class="c1">#</span>
+
+        <span class="c1"># connect buttons</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup_main_buttons</span><span class="p">()</span>
+
+        <span class="c1"># user data dictionary</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;login&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;surname&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                          <span class="s2">&quot;user_photo&quot;</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="s2">&quot;face_photo&quot;</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="s2">&quot;face_auth&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">login</span><span class="p">)</span>           <span class="c1"># get data from database function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings_changed</span> <span class="o">=</span> <span class="kc">None</span>    <span class="c1"># init settings flag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">animation</span> <span class="o">=</span> <span class="kc">None</span>           <span class="c1"># init animation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dialog</span> <span class="o">=</span> <span class="kc">None</span>              <span class="c1"># init confirm dialog window</span>
+
+<div class="viewcode-block" id="MainWindow.setup_main_buttons"><a class="viewcode-back" href="../../windows.html#windows.main_window.MainWindow.setup_main_buttons">[docs]</a>    <span class="k">def</span> <span class="nf">setup_main_buttons</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set methods for processing button clicks on every ui button.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_menu</span><span class="p">)</span>        <span class="c1"># open menu button</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_profile</span><span class="p">)</span>    <span class="c1"># open profile button</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_settings</span><span class="p">)</span>  <span class="c1"># open settings button</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">about</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_about</span><span class="p">)</span>        <span class="c1"># open about button</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">close_menu_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">close_menu</span><span class="p">)</span>    <span class="c1"># close menu button</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">button_2</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_menu</span><span class="p">)</span>      <span class="c1"># open menu button</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">uploadButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">face_auth_test</span><span class="p">)</span>  <span class="c1"># select image and detect face</span></div>
+
+    <span class="c1"># open navigation menu</span>
+<div class="viewcode-block" id="MainWindow.open_menu"><a class="viewcode-back" href="../../windows.html#windows.main_window.MainWindow.open_menu">[docs]</a>    <span class="k">def</span> <span class="nf">open_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method for changing navigation menu width.</span>
+
+<span class="sd">        If menu is open -&gt; close it.</span>
+
+<span class="sd">        If menu is half open -&gt; open it fully.</span>
+
+<span class="sd">        If menu is fully closed -&gt; open it fully.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">slide_menu_cont</span><span class="o">.</span><span class="n">width</span><span class="p">()</span>     <span class="c1"># get current menu width</span>
+        <span class="c1"># if current width = 0 -&gt; menu is closed, setup new width for opening animation</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">image_output</span><span class="o">.</span><span class="n">minimumWidth</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">width</span> <span class="o">==</span> <span class="mi">60</span> <span class="ow">or</span> <span class="n">width</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">width</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">button_2</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">new_width</span> <span class="o">=</span> <span class="mi">170</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">button</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QIcon</span><span class="p">(</span><span class="s2">&quot;:/icons/icons/arrow_left.svg&quot;</span><span class="p">))</span>
+            <span class="c1"># show text on buttons</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">menu_label</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="mi">120</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot; Profile&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot; Settings&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">about</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">about</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot; About&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">close_menu_button</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">close_menu_button</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot; Close&quot;</span><span class="p">)</span>
+        <span class="c1"># if current width = 170 -&gt; menu is open, setup new width for closing animation</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_width</span> <span class="o">=</span> <span class="mi">60</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">button</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QIcon</span><span class="p">(</span><span class="s2">&quot;:/icons/icons/menu.svg&quot;</span><span class="p">))</span>
+            <span class="c1"># hide text on buttons</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">menu_label</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">about</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">about</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">close_menu_button</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">close_menu_button</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="c1"># init and start animation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">animation</span> <span class="o">=</span> <span class="n">QPropertyAnimation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">slide_menu_cont</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;maximumWidth&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">setDuration</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">setStartValue</span><span class="p">(</span><span class="n">width</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">setEndValue</span><span class="p">(</span><span class="n">new_width</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">slide_menu</span><span class="o">.</span><span class="n">setMaximumWidth</span><span class="p">(</span><span class="mi">170</span><span class="p">)</span></div>
+
+    <span class="c1"># close menu button pressed</span>
+<div class="viewcode-block" id="MainWindow.close_menu"><a class="viewcode-back" href="../../windows.html#windows.main_window.MainWindow.close_menu">[docs]</a>    <span class="k">def</span> <span class="nf">close_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method for fully closing navigation menu.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># set menu width = 0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">slide_menu_cont</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">slide_menu_cont</span><span class="o">.</span><span class="n">setMaximumWidth</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">slide_menu</span><span class="o">.</span><span class="n">setMaximumWidth</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">slide_menu</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">button_2</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span></div>
+
+    <span class="c1"># upload button pressed -&gt; open upload dialog, detect face on selected image, output</span>
+<div class="viewcode-block" id="MainWindow.face_auth_test"><a class="viewcode-back" href="../../windows.html#windows.main_window.MainWindow.face_auth_test">[docs]</a>    <span class="k">def</span> <span class="nf">face_auth_test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method for processing mouse click on &quot;Upload&quot; button in main menu user interface.</span>
+
+<span class="sd">        This method ask user to upload image and then try to detect face. Finally, output result for user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dialog</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">setDirectory</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;C:&#39;</span><span class="p">)</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">setFileMode</span><span class="p">(</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">FileMode</span><span class="o">.</span><span class="n">ExistingFile</span><span class="p">)</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">setNameFilter</span><span class="p">(</span><span class="s2">&quot;Images (*.png *.jpg)&quot;</span><span class="p">)</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">setViewMode</span><span class="p">(</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">ViewMode</span><span class="o">.</span><span class="n">List</span><span class="p">)</span>
+        <span class="c1"># if file dialog window closed -&gt; try to check uploaded image</span>
+        <span class="k">if</span> <span class="n">dialog</span><span class="o">.</span><span class="n">exec</span><span class="p">():</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">selectedFiles</span><span class="p">()</span>
+            <span class="c1"># if any file was selected -&gt; check it for face</span>
+            <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
+                <span class="n">mtcnn</span> <span class="o">=</span> <span class="n">MTCNN</span><span class="p">(</span><span class="n">keep_all</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>   <span class="c1"># init detection model</span>
+                <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">boxes</span><span class="p">,</span> <span class="n">probs</span><span class="p">,</span> <span class="n">points</span> <span class="o">=</span> <span class="n">mtcnn</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">landmarks</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># get face boxes and probabilities</span>
+                <span class="c1"># if any face detected -&gt; mark them on image and output to user</span>
+                <span class="k">if</span> <span class="n">probs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">img_draw</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                    <span class="n">draw</span> <span class="o">=</span> <span class="n">ImageDraw</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="n">img_draw</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">box</span><span class="p">,</span> <span class="n">point</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">boxes</span><span class="p">,</span> <span class="n">points</span><span class="p">)):</span>
+                        <span class="n">draw</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">width</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">point</span><span class="p">:</span>
+                            <span class="n">draw</span><span class="o">.</span><span class="n">rectangle</span><span class="p">((</span><span class="n">p</span> <span class="o">-</span> <span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">width</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+                    <span class="n">img_draw</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;user_data/detected_faces.png&#39;</span><span class="p">)</span>
+                    <span class="c1"># output image on main window</span>
+                    <span class="n">image</span> <span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="s1">&#39;user_data/detected_faces.png&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">image</span><span class="o">.</span><span class="n">width</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">665</span> <span class="ow">or</span> <span class="n">image</span><span class="o">.</span><span class="n">height</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">576</span><span class="p">:</span>
+                        <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">scaled</span><span class="p">(</span><span class="mi">665</span><span class="p">,</span> <span class="mi">576</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">AspectRatioMode</span><span class="o">.</span><span class="n">KeepAspectRatio</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">image_output</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">image_output</span><span class="o">.</span><span class="n">setMaximumWidth</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">width</span><span class="p">())</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">image_output</span><span class="o">.</span><span class="n">setMaximumHeight</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">height</span><span class="p">())</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">image_output</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s2">&quot;border: 2px solid #000000;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                                                       <span class="s2">&quot;border-radius: 0px;&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">image_output</span><span class="o">.</span><span class="n">setPixmap</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+                <span class="c1"># if no face detected -&gt; inform user</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">image_output</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Cannot detect any faces on selected image&quot;</span><span class="p">)</span></div>
+
+<span class="c1">#   -- Profile ---</span>
+    <span class="c1"># open user profile menu</span>
+<div class="viewcode-block" id="MainWindow.open_profile"><a class="viewcode-back" href="../../windows.html#windows.main_window.MainWindow.open_profile">[docs]</a>    <span class="k">def</span> <span class="nf">open_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method for processing mouse click on &quot;Profile&quot; button in navigation menu.</span>
+
+<span class="sd">        Method opens user profile interface, connect buttons and paste user info in relevant lines.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span>  <span class="c1"># change ui to profile</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>   <span class="c1"># setup new ui</span>
+        <span class="n">MainWindow</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s1">&#39;login&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># set window title</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">name_line</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>                        <span class="c1"># set name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">surname_line</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;surname&quot;</span><span class="p">])</span>                  <span class="c1"># set surname</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">email_line</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;email&quot;</span><span class="p">])</span>                      <span class="c1"># set email</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">login_line</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;login&quot;</span><span class="p">])</span>                      <span class="c1"># set login</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">user_photo</span><span class="o">.</span><span class="n">setPixmap</span><span class="p">(</span><span class="n">QPixmap</span><span class="p">(</span><span class="s2">&quot;user_data/user_photo.png&quot;</span><span class="p">))</span>  <span class="c1"># set user photo</span>
+
+        <span class="c1"># connect buttons of new ui</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">chanhe_password</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">change_password</span><span class="p">)</span>        <span class="c1"># opens field for entering new password</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">save_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_data</span><span class="p">)</span>                  <span class="c1"># save info to users database</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">back</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">back_to_main</span><span class="p">)</span>                      <span class="c1"># returns back to main window</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">exit_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exit_from_account</span><span class="p">)</span>          <span class="c1"># exit from user account</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">vis_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">toggle_password_visibility</span><span class="p">)</span>  <span class="c1"># show/hide password</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">user_photo</span><span class="o">.</span><span class="n">installEventFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>                          <span class="c1"># upload user photo by icon click</span></div>
+
+    <span class="c1"># upload profile photo by pressing on user photo</span>
+<div class="viewcode-block" id="MainWindow.eventFilter"><a class="viewcode-back" href="../../windows.html#windows.main_window.MainWindow.eventFilter">[docs]</a>    <span class="k">def</span> <span class="nf">eventFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method for processing mouse click on &quot;User avatar image&quot; in profile user interface.</span>
+
+<span class="sd">        This method ask user to upload new user profile image.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># if mouse click on photo icon -&gt; open file dialog to select new photo</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span><span class="p">()</span> <span class="o">==</span> <span class="n">QEvent</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">MouseButtonPress</span><span class="p">:</span>
+            <span class="c1"># configure and open file dialog window</span>
+            <span class="n">dialog</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">dialog</span><span class="o">.</span><span class="n">setDirectory</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;C:&#39;</span><span class="p">)</span>
+            <span class="n">dialog</span><span class="o">.</span><span class="n">setFileMode</span><span class="p">(</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">FileMode</span><span class="o">.</span><span class="n">ExistingFile</span><span class="p">)</span>
+            <span class="n">dialog</span><span class="o">.</span><span class="n">setNameFilter</span><span class="p">(</span><span class="s2">&quot;Images (*.png *.jpg)&quot;</span><span class="p">)</span>
+            <span class="n">dialog</span><span class="o">.</span><span class="n">setViewMode</span><span class="p">(</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">ViewMode</span><span class="o">.</span><span class="n">List</span><span class="p">)</span>
+            <span class="c1"># if file dialog window closed -&gt; try to upload selected photo</span>
+            <span class="k">if</span> <span class="n">dialog</span><span class="o">.</span><span class="n">exec</span><span class="p">():</span>
+                <span class="n">filename</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">selectedFiles</span><span class="p">()</span>  <span class="c1"># get path to selected file</span>
+                <span class="c1"># if filename != None (file was selected) -&gt; upload photo</span>
+                <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
+                    <span class="n">copy</span><span class="p">(</span><span class="n">filename</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;user_data/user_photo.png&quot;</span><span class="p">)</span>       <span class="c1"># copy selected image to user data</span>
+                    <span class="n">pixmap</span> <span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="s2">&quot;user_data/user_photo.png&quot;</span><span class="p">)</span>  <span class="c1"># setup selected image to user profile</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">user_photo</span><span class="o">.</span><span class="n">setPixmap</span><span class="p">(</span><span class="n">pixmap</span><span class="p">)</span>           <span class="c1">#</span>
+                    <span class="c1"># save selected image to users database</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">connection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connect_to_db</span><span class="p">()</span>    <span class="c1"># establish connection to database</span>
+                        <span class="k">with</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cursor</span><span class="p">:</span>  <span class="c1"># init cursor to execute PostgreSQL command</span>
+                            <span class="n">drawing</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;user_data/user_photo.png&quot;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                            <span class="c1"># update user photo by login</span>
+                            <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;update users &quot;</span> 
+                                           <span class="sa">f</span><span class="s2">&quot;set user_photo = </span><span class="si">{</span><span class="n">psycopg2</span><span class="o">.</span><span class="n">Binary</span><span class="p">(</span><span class="n">drawing</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span>
+                                           <span class="sa">f</span><span class="s2">&quot;where login = &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s1">&#39;login&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+                            <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>              <span class="c1"># commit changes</span>
+                        <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>                   <span class="c1"># close connection</span>
+                    <span class="c1"># processing database errors</span>
+                    <span class="k">except</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO] database error&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+    <span class="c1"># opens field for entering new password</span>
+<div class="viewcode-block" id="MainWindow.change_password"><a class="viewcode-back" href="../../windows.html#windows.main_window.MainWindow.change_password">[docs]</a>    <span class="k">def</span> <span class="nf">change_password</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method for processing mouse click on &quot;Change password&quot; button in profile user interface.</span>
+
+<span class="sd">        This method show in interface fields where user should input new password.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">change_frame</span><span class="o">.</span><span class="n">setMinimumHeight</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>       <span class="c1"># hide password change button</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">change_frame</span><span class="o">.</span><span class="n">setMaximumHeight</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>       <span class="c1">#</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">password_frame</span><span class="o">.</span><span class="n">setMaximumHeight</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>   <span class="c1"># show lines for changing password</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">password2_frame</span><span class="o">.</span><span class="n">setMaximumHeight</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>  <span class="c1">#</span></div>
+
+    <span class="c1"># show/hide password</span>
+<div class="viewcode-block" id="MainWindow.toggle_password_visibility"><a class="viewcode-back" href="../../windows.html#windows.main_window.MainWindow.toggle_password_visibility">[docs]</a>    <span class="k">def</span> <span class="nf">toggle_password_visibility</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method for processing mouse click on &quot;Visibility&quot; button in profile user interface.</span>
+
+<span class="sd">        This method toggle passwords line echo mode (password/normal).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># if current password line echo mode = password (***) -&gt; change to normal echo mode</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">password_line</span><span class="o">.</span><span class="n">echoMode</span><span class="p">()</span> <span class="o">==</span> <span class="n">QLineEdit</span><span class="o">.</span><span class="n">EchoMode</span><span class="o">.</span><span class="n">Password</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">password_line</span><span class="o">.</span><span class="n">setEchoMode</span><span class="p">(</span><span class="n">QLineEdit</span><span class="o">.</span><span class="n">EchoMode</span><span class="o">.</span><span class="n">Normal</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">password2_line</span><span class="o">.</span><span class="n">setEchoMode</span><span class="p">(</span><span class="n">QLineEdit</span><span class="o">.</span><span class="n">EchoMode</span><span class="o">.</span><span class="n">Normal</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">vis_button</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QIcon</span><span class="p">(</span><span class="s2">&quot;:/icons/icons/view.svg&quot;</span><span class="p">))</span>
+        <span class="c1"># if current password line echo mode = normal -&gt; change to password echo mode</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">password_line</span><span class="o">.</span><span class="n">setEchoMode</span><span class="p">(</span><span class="n">QLineEdit</span><span class="o">.</span><span class="n">EchoMode</span><span class="o">.</span><span class="n">Password</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">password2_line</span><span class="o">.</span><span class="n">setEchoMode</span><span class="p">(</span><span class="n">QLineEdit</span><span class="o">.</span><span class="n">EchoMode</span><span class="o">.</span><span class="n">Password</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">vis_button</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QIcon</span><span class="p">(</span><span class="s2">&quot;:/icons/icons/view_off.svg&quot;</span><span class="p">))</span></div>
+
+    <span class="c1"># saving data to users database</span>
+<div class="viewcode-block" id="MainWindow.save_data"><a class="viewcode-back" href="../../windows.html#windows.main_window.MainWindow.save_data">[docs]</a>    <span class="k">def</span> <span class="nf">save_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method for processing mouse click on &quot;Save&quot; button in profile user interface.</span>
+
+<span class="sd">        This method generates dialog window to ask user &quot;Are you sure?&quot; and implements functions of user answer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">name_line</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>              <span class="c1"># get new name</span>
+        <span class="n">surname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">surname_line</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>        <span class="c1"># get new surname</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">email_line</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>            <span class="c1"># get new email</span>
+        <span class="n">login</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">login_line</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>            <span class="c1"># get new login</span>
+        <span class="n">new_password</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">password_line</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>  <span class="c1"># get new password</span>
+        <span class="c1"># if new password entered -&gt; select new, else select password from user data</span>
+        <span class="n">new_password</span> <span class="o">=</span> <span class="n">new_password</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_password</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;password&quot;</span><span class="p">]</span>
+
+        <span class="c1"># if OK pressed in dialog window -&gt; save info to users database</span>
+        <span class="k">def</span> <span class="nf">ok_pressed</span><span class="p">():</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Function for processing &quot;OK&quot; button in confirm dialog window.</span>
+
+<span class="sd">            This function execute SQL command to save input lines in user database.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">connection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connect_to_db</span><span class="p">()</span>    <span class="c1"># establish connection to database</span>
+                <span class="k">with</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cursor</span><span class="p">:</span>  <span class="c1"># init cursor to execute PostgreSQL command</span>
+                    <span class="c1"># select login by login</span>
+                    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;select login from users where login = &#39;</span><span class="si">{</span><span class="n">login</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+                    <span class="n">info</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>         <span class="c1"># receive query result</span>
+                    <span class="c1"># if entered login in database, and it is not current user login -&gt; inform user</span>
+                    <span class="k">if</span> <span class="n">info</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;login&quot;</span><span class="p">]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">login_line</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">OCCUPIED_LOGIN</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; already &quot;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">))</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">login_line</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="n">DEFAULT_LINE_STYLE</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">BLACK</span><span class="p">,</span> <span class="n">RED</span><span class="p">))</span>
+                    <span class="c1"># if no such login in database or entered login = current user login -&gt; update info in table</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">login_line</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="n">DEFAULT_LINE_STYLE</span><span class="p">)</span>  <span class="c1"># clean login style</span>
+                        <span class="c1"># execute PostgreSQL command (update all user info)</span>
+                        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;update users &quot;</span>
+                                       <span class="sa">f</span><span class="s2">&quot;set user_name = &#39;</span><span class="si">{</span><span class="n">name</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2">&#39;, &quot;</span>
+                                       <span class="sa">f</span><span class="s2">&quot;surname = &#39;</span><span class="si">{</span><span class="n">surname</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2">&#39;, &quot;</span>
+                                       <span class="sa">f</span><span class="s2">&quot;email = &#39;</span><span class="si">{</span><span class="n">email</span><span class="si">}</span><span class="s2">&#39;, &quot;</span>
+                                       <span class="sa">f</span><span class="s2">&quot;login = &#39;</span><span class="si">{</span><span class="n">login</span><span class="si">}</span><span class="s2">&#39;, &quot;</span>
+                                       <span class="sa">f</span><span class="s2">&quot;password = &#39;</span><span class="si">{</span><span class="n">new_password</span><span class="si">}</span><span class="s2">&#39;, &quot;</span>
+                                       <span class="sa">f</span><span class="s2">&quot;user_photo = </span><span class="si">{</span><span class="n">psycopg2</span><span class="o">.</span><span class="n">Binary</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;user_data/user_photo.png&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="si">}</span><span class="s2">,&quot;</span>
+                                       <span class="sa">f</span><span class="s2">&quot; enable_face_auth = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s1">&#39;face_auth&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, &quot;</span>
+                                       <span class="sa">f</span><span class="s2">&quot;user_face = </span><span class="si">{</span><span class="n">psycopg2</span><span class="o">.</span><span class="n">Binary</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;user_data/face_photo.png&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="si">}</span><span class="s2"> &quot;</span>
+                                       <span class="sa">f</span><span class="s2">&quot;where login = &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s1">&#39;login&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+                        <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>  <span class="c1"># commit changes in database</span>
+
+                        <span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;login&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">login</span>                 <span class="c1"># update current user data with entered fields</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;email&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">email</span>                 <span class="c1">#</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>                   <span class="c1">#</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;surname&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">surname</span>             <span class="c1">#</span>
+                        <span class="k">if</span> <span class="n">new_password</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;password&quot;</span><span class="p">]:</span>  <span class="c1">#</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;password&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_password</span>   <span class="c1">#</span>
+                <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>                                      <span class="c1"># close connection</span>
+            <span class="c1"># processing database errors</span>
+            <span class="k">except</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">Error</span> <span class="k">as</span> <span class="n">_ex</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO] database working error&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dialog</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>  <span class="c1"># close confirm dialog window</span>
+
+        <span class="c1"># if CANCEL pressed in dialog window -&gt; close window</span>
+        <span class="k">def</span> <span class="nf">cancel_pressed</span><span class="p">():</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Function for processing &quot;Cancel&quot; button in confirm dialog window.</span>
+
+<span class="sd">            This function just close dialog window.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dialog</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>  <span class="c1"># close confirm dialog window</span>
+
+        <span class="c1"># open dialog window</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dialog</span> <span class="o">=</span> <span class="n">Dialog</span><span class="p">(</span><span class="n">ok_pressed</span><span class="p">,</span> <span class="n">cancel_pressed</span><span class="p">)</span>  <span class="c1"># init confirm dialog window</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dialog</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>                                <span class="c1"># show confirm dialog window</span></div>
+
+    <span class="c1"># returns back to main menu</span>
+<div class="viewcode-block" id="MainWindow.back_to_main"><a class="viewcode-back" href="../../windows.html#windows.main_window.MainWindow.back_to_main">[docs]</a>    <span class="k">def</span> <span class="nf">back_to_main</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method for processing &quot;Back&quot; button in profile user interface.</span>
+
+<span class="sd">        This method change user interface and connect buttons for main menu.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main</span>       <span class="c1"># change iu to main window</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>     <span class="c1"># setup new ui</span>
+        <span class="n">MainWindow</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s1">&#39;login&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>      <span class="c1"># setup window title</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">hello_title</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hello, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s1">&#39;login&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">)</span>  <span class="c1"># setup hello title</span>
+
+        <span class="c1"># reconnect buttons of ui</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup_main_buttons</span><span class="p">()</span></div>
+
+    <span class="c1"># exit from account and close app window</span>
+<div class="viewcode-block" id="MainWindow.exit_from_account"><a class="viewcode-back" href="../../windows.html#windows.main_window.MainWindow.exit_from_account">[docs]</a>    <span class="k">def</span> <span class="nf">exit_from_account</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method for processing mouse click on &quot;Exit&quot; button in profile user interface.</span>
+
+<span class="sd">        This method generates dialog window to ask user &quot;Are you sure?&quot; and implements functions of user answer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># if OK pressed in dialog window -&gt; exit from user account</span>
+        <span class="k">def</span> <span class="nf">ok_pressed</span><span class="p">():</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Function for processing &quot;OK&quot; button in confirm dialog window.</span>
+
+<span class="sd">            This function exit from user account and close application window.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dialog</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="c1"># rewrite user data login file not auto log in next time</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;user_data/data.py&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">datafile</span><span class="p">:</span>
+                <span class="n">datafile</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">datafile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;logged = False</span><span class="se">\n</span><span class="s2">login = &#39;&#39;</span><span class="se">\n</span><span class="s2">password = &#39;&#39;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">datafile</span><span class="o">.</span><span class="n">truncate</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="c1"># if CANCEL pressed in dialog window -&gt; close window</span>
+        <span class="k">def</span> <span class="nf">cancel_pressed</span><span class="p">():</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Function for processing &quot;Cancel&quot; button in confirm dialog window.</span>
+
+<span class="sd">            This function just close dialog window.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dialog</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dialog</span> <span class="o">=</span> <span class="n">Dialog</span><span class="p">(</span><span class="n">ok_pressed</span><span class="p">,</span> <span class="n">cancel_pressed</span><span class="p">)</span>  <span class="c1"># init dialog window</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dialog</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>                                <span class="c1"># show dialog window</span></div>
+
+<span class="c1">#   --- Settings ---</span>
+    <span class="c1"># open settings menu</span>
+<div class="viewcode-block" id="MainWindow.open_settings"><a class="viewcode-back" href="../../windows.html#windows.main_window.MainWindow.open_settings">[docs]</a>    <span class="k">def</span> <span class="nf">open_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method for processing mouse click on &quot;Settings&quot; button in navigation menu.</span>
+
+<span class="sd">        Method opens settings interface and connect buttons of settings menu.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span>  <span class="c1"># change ui to settings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>    <span class="c1">#</span>
+        <span class="n">MainWindow</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s1">&#39;login&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># set window title</span>
+
+        <span class="c1"># if user enable face auth previously -&gt; instantly set checked enable button</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;face_auth&quot;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">enable_button</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># connect buttons of new gui</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">back_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_and_back</span><span class="p">)</span>       <span class="c1"># return to main menu</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">enable_button</span><span class="o">.</span><span class="n">toggled</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">toggle_face_auth</span><span class="p">)</span>  <span class="c1"># open upload menu</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">uploadButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upload_face</span><span class="p">)</span>        <span class="c1"># upload face photo</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings_changed</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+    <span class="c1"># face auth button pressed</span>
+<div class="viewcode-block" id="MainWindow.toggle_face_auth"><a class="viewcode-back" href="../../windows.html#windows.main_window.MainWindow.toggle_face_auth">[docs]</a>    <span class="k">def</span> <span class="nf">toggle_face_auth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method for processing mouse click on checkbox &quot;Face authentication&quot; in settings menu.</span>
+
+<span class="sd">        If it is now enabled -&gt; open upload button for user.</span>
+
+<span class="sd">        If it is now disabled -&gt; set up face auth flag = false.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings_changed</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># if face auth now enabled -&gt; open upload button for user with animation</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">enable_button</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="c1"># init and start opening animation</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">animation</span> <span class="o">=</span> <span class="n">QPropertyAnimation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">upload_frame</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;maximumHeight&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">setDuration</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">setStartValue</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">setEndValue</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="c1"># if face auth now disabled -&gt; update user data and hide upload button</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;face_auth&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">back_button</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">upload_frame</span><span class="o">.</span><span class="n">setMaximumHeight</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+
+    <span class="c1"># upload button pressed</span>
+<div class="viewcode-block" id="MainWindow.upload_face"><a class="viewcode-back" href="../../windows.html#windows.main_window.MainWindow.upload_face">[docs]</a>    <span class="k">def</span> <span class="nf">upload_face</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method for processing mouse click on &quot;Upload&quot; button in settings menu.</span>
+
+<span class="sd">        Ask user to select image with his face, try to construct user face pattern from selected image.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># configure and open file dialog window</span>
+        <span class="n">dialog</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">setDirectory</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;C:&#39;</span><span class="p">)</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">setFileMode</span><span class="p">(</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">FileMode</span><span class="o">.</span><span class="n">ExistingFile</span><span class="p">)</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">setNameFilter</span><span class="p">(</span><span class="s2">&quot;Images (*.png *.jpg)&quot;</span><span class="p">)</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">setViewMode</span><span class="p">(</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">ViewMode</span><span class="o">.</span><span class="n">List</span><span class="p">)</span>
+        <span class="c1"># if file dialog window closed -&gt; try to check uploaded image</span>
+        <span class="k">if</span> <span class="n">dialog</span><span class="o">.</span><span class="n">exec</span><span class="p">():</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">selectedFiles</span><span class="p">()</span>
+            <span class="c1"># if any file was selected -&gt; check it for face</span>
+            <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
+                <span class="n">mtcnn</span> <span class="o">=</span> <span class="n">MTCNN</span><span class="p">(</span><span class="n">image_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">min_face_size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>  <span class="c1"># initializing mtcnn for face detection</span>
+                <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">face</span><span class="p">,</span> <span class="n">prob</span> <span class="o">=</span> <span class="n">mtcnn</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">return_prob</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;user_data/face_photo.png&quot;</span><span class="p">)</span>
+                <span class="c1"># if face was not detected or ensurance of network &lt; 95% -&gt; inform user about incorrect photo</span>
+                <span class="k">if</span> <span class="n">face</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">prob</span> <span class="o">&lt;</span> <span class="mf">0.95</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">INCORRECT_PHOTO</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">back_button</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                <span class="c1"># if face was detected -&gt; save photo to user data</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">OK_PHOTO</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;face_auth&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">back_button</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
+
+    <span class="c1"># back to main menu button pressed</span>
+<div class="viewcode-block" id="MainWindow.save_and_back"><a class="viewcode-back" href="../../windows.html#windows.main_window.MainWindow.save_and_back">[docs]</a>    <span class="k">def</span> <span class="nf">save_and_back</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method for processing mouse click on &quot;Back&quot; button in settings menu.</span>
+
+<span class="sd">        If some settings changed -&gt; save data to user database.</span>
+
+<span class="sd">        Returns user back to main menu.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># if settings changed flag was marked -&gt; save changes to database</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings_changed</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">connection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connect_to_db</span><span class="p">()</span>    <span class="c1"># connect to database</span>
+                <span class="k">with</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cursor</span><span class="p">:</span>  <span class="c1"># init cursor</span>
+                    <span class="c1"># update users database with face auth flag and user face photo</span>
+                    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;update users &quot;</span>
+                                   <span class="sa">f</span><span class="s2">&quot;set enable_face_auth = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s1">&#39;face_auth&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, &quot;</span>
+                                   <span class="sa">f</span><span class="s2">&quot;user_face = </span><span class="si">{</span><span class="n">psycopg2</span><span class="o">.</span><span class="n">Binary</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;user_data/face_photo.png&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="si">}</span><span class="s2"> &quot;</span>
+                                   <span class="sa">f</span><span class="s2">&quot;where login = &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s1">&#39;login&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+                    <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>              <span class="c1"># save changes to database</span>
+                <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>                   <span class="c1"># close connection</span>
+            <span class="c1"># processing database errors</span>
+            <span class="k">except</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">Error</span> <span class="k">as</span> <span class="n">_ex</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO] database working error&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">back_to_main</span><span class="p">()</span></div>
+
+<span class="c1">#   --- About ---</span>
+<div class="viewcode-block" id="MainWindow.open_about"><a class="viewcode-back" href="../../windows.html#windows.main_window.MainWindow.open_about">[docs]</a>    <span class="k">def</span> <span class="nf">open_about</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method for processing mouse click on &quot;About&quot; button in navigation menu.</span>
+
+<span class="sd">        Method opens about interface and connect buttons of about menu.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span> <span class="o">=</span> <span class="n">UiAbout</span><span class="p">()</span>       <span class="c1"># change iu to main window</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>     <span class="c1"># setup new ui</span>
+        <span class="n">MainWindow</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s1">&#39;login&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>      <span class="c1"># setup window title</span>
+
+        <span class="c1"># reconnect buttons of ui</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">back_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">back_to_main</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">github_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_github</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MainWindow.open_github"><a class="viewcode-back" href="../../windows.html#windows.main_window.MainWindow.open_github">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">open_github</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method for processing mouse click on GitHub icon in about menu.</span>
+
+<span class="sd">        Open GitHub repository of project.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">QDesktopServices</span><span class="o">.</span><span class="n">openUrl</span><span class="p">(</span><span class="n">QUrl</span><span class="p">(</span><span class="s2">&quot;https://github.com/shmatozz/desktop-App-With-Face-Auth&quot;</span><span class="p">))</span></div>
+
+    <span class="c1"># loading all user info from database</span>
+<div class="viewcode-block" id="MainWindow.load_data"><a class="viewcode-back" href="../../windows.html#windows.main_window.MainWindow.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">login</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method for get user information from database.</span>
+
+<span class="sd">        Called in __init__ method.</span>
+<span class="sd">        :param login: user login used to sign in app.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">connect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connect_to_db</span><span class="p">()</span>
+            <span class="k">with</span> <span class="n">connect</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cursor</span><span class="p">:</span>
+                <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;select * from users where login = &#39;</span><span class="si">{</span><span class="n">login</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+                <span class="n">info</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>    <span class="c1"># info[0] = user id</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;surname&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;email&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;login&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;password&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;user_photo&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;face_auth&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;face_photo&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span>
+                <span class="c1"># if user upload photo to database -&gt; upload it to current user data</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;user_photo&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;user_data/user_photo.png&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">photo</span><span class="p">:</span>
+                        <span class="n">photo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;user_photo&quot;</span><span class="p">]))</span>
+                <span class="c1"># if no user photo in database -&gt; upload person icon as user photo</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;user_data/user_photo.png&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">photo</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;ui/icons/person.png&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">a</span><span class="p">:</span>
+                        <span class="n">photo_b</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                        <span class="n">photo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">photo_b</span><span class="p">)</span>
+                <span class="c1"># if user upload face in database -&gt; upload it to current user data</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;face_photo&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;user_data/face_photo.png&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">photo</span><span class="p">:</span>
+                        <span class="n">photo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;face_photo&quot;</span><span class="p">]))</span>
+                <span class="c1"># if no user face in database -&gt; upload person icon as user face</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;user_data/face_photo.png&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">photo</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;ui/icons/person.png&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">a</span><span class="p">:</span>
+                        <span class="n">photo_b</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                        <span class="n">photo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">photo_b</span><span class="p">)</span>
+            <span class="n">connect</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO] database error&quot;</span><span class="p">)</span></div>
+
+    <span class="c1"># establish connection to database</span>
+<div class="viewcode-block" id="MainWindow.connect_to_db"><a class="viewcode-back" href="../../windows.html#windows.main_window.MainWindow.connect_to_db">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">connect_to_db</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Establish connection with users database.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span>
+                                <span class="n">user</span><span class="o">=</span><span class="s2">&quot;postgres&quot;</span><span class="p">,</span>
+                                <span class="n">password</span><span class="o">=</span><span class="s2">&quot;1234567890&quot;</span><span class="p">,</span>
+                                <span class="n">database</span><span class="o">=</span><span class="s2">&quot;app_users&quot;</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Matvey Baryshev.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,598 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="user_data package" href="user_data.html" /><link rel="prev" title="main module" href="main.html" />
+
+    <!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
+        <title>ui package - Desktop Application with Face Authentication 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = "light";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">Desktop Application with Face Authentication 0.1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">Desktop Application with Face Authentication 0.1.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">desktop-App-With-Face-Auth</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">ui package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_data.html">user_data package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="windows.html">windows package</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="ui-package">
+<h1>ui package<a class="headerlink" href="#ui-package" title="Permalink to this heading">#</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="module-ui.about">
+<span id="ui-about-module"></span><h2>ui.about module<a class="headerlink" href="#module-ui.about" title="Permalink to this heading">#</a></h2>
+<p>File that implements user interface building of About window.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="ui.about.UiAbout">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ui.about.</span></span><span class="sig-name descname"><span class="pre">UiAbout</span></span><a class="reference internal" href="_modules/ui/about.html#UiAbout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ui.about.UiAbout" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Build user interface class of About window.</p>
+<p>This class was automatically generated by PyQt.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ui.about.UiAbout.retranslateUi">
+<span class="sig-name descname"><span class="pre">retranslateUi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">About</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ui/about.html#UiAbout.retranslateUi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ui.about.UiAbout.retranslateUi" title="Permalink to this definition">#</a></dt>
+<dd><p>Method that setup text titles to window and fields.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>About</strong> – window where need to construct interface.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui.about.UiAbout.setupUi">
+<span class="sig-name descname"><span class="pre">setupUi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">About</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ui/about.html#UiAbout.setupUi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ui.about.UiAbout.setupUi" title="Permalink to this definition">#</a></dt>
+<dd><p>Method that init and place all parts of user interface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>About</strong> – window where need to construct interface.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-ui.confirm_dialog">
+<span id="ui-confirm-dialog-module"></span><h2>ui.confirm_dialog module<a class="headerlink" href="#module-ui.confirm_dialog" title="Permalink to this heading">#</a></h2>
+<p>File that implements user interface building of Dialog window.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="ui.confirm_dialog.UiConfirm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ui.confirm_dialog.</span></span><span class="sig-name descname"><span class="pre">UiConfirm</span></span><a class="reference internal" href="_modules/ui/confirm_dialog.html#UiConfirm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ui.confirm_dialog.UiConfirm" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Build user interface class of Dialog window.</p>
+<p>This class was automatically generated by PyQt.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ui.confirm_dialog.UiConfirm.retranslateUi">
+<span class="sig-name descname"><span class="pre">retranslateUi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Dialog</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ui/confirm_dialog.html#UiConfirm.retranslateUi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ui.confirm_dialog.UiConfirm.retranslateUi" title="Permalink to this definition">#</a></dt>
+<dd><p>Method that setup text titles to window and fields.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Dialog</strong> – window where need to construct interface.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui.confirm_dialog.UiConfirm.setupUi">
+<span class="sig-name descname"><span class="pre">setupUi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Dialog</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ui/confirm_dialog.html#UiConfirm.setupUi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ui.confirm_dialog.UiConfirm.setupUi" title="Permalink to this definition">#</a></dt>
+<dd><p>Method that init and place all parts of user interface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Dialog</strong> – window where need to construct interface.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-ui.icons_rc">
+<span id="ui-icons-rc-module"></span><h2>ui.icons_rc module<a class="headerlink" href="#module-ui.icons_rc" title="Permalink to this heading">#</a></h2>
+<p>File that initialize app icons.</p>
+<p>This file was automatically generated by PyQt.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="ui.icons_rc.qCleanupResources">
+<span class="sig-prename descclassname"><span class="pre">ui.icons_rc.</span></span><span class="sig-name descname"><span class="pre">qCleanupResources</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ui/icons_rc.html#qCleanupResources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ui.icons_rc.qCleanupResources" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ui.icons_rc.qInitResources">
+<span class="sig-prename descclassname"><span class="pre">ui.icons_rc.</span></span><span class="sig-name descname"><span class="pre">qInitResources</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ui/icons_rc.html#qInitResources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ui.icons_rc.qInitResources" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-ui.main_menu">
+<span id="ui-main-menu-module"></span><h2>ui.main_menu module<a class="headerlink" href="#module-ui.main_menu" title="Permalink to this heading">#</a></h2>
+<p>File that implements user interface building of Main Menu window.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="ui.main_menu.UiMainWindow">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ui.main_menu.</span></span><span class="sig-name descname"><span class="pre">UiMainWindow</span></span><a class="reference internal" href="_modules/ui/main_menu.html#UiMainWindow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ui.main_menu.UiMainWindow" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Build user interface class of Main Menu window.</p>
+<p>This class was automatically generated by PyQt.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ui.main_menu.UiMainWindow.retranslateUi">
+<span class="sig-name descname"><span class="pre">retranslateUi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MainWindow</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ui/main_menu.html#UiMainWindow.retranslateUi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ui.main_menu.UiMainWindow.retranslateUi" title="Permalink to this definition">#</a></dt>
+<dd><p>Method that setup text titles to window and fields.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>MainWindow</strong> – window where need to construct interface.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui.main_menu.UiMainWindow.setupUi">
+<span class="sig-name descname"><span class="pre">setupUi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MainWindow</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ui/main_menu.html#UiMainWindow.setupUi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ui.main_menu.UiMainWindow.setupUi" title="Permalink to this definition">#</a></dt>
+<dd><p>Method that init and place all parts of user interface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>MainWindow</strong> – window where need to construct interface.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-ui.profile">
+<span id="ui-profile-module"></span><h2>ui.profile module<a class="headerlink" href="#module-ui.profile" title="Permalink to this heading">#</a></h2>
+<p>File that implements user interface building of Profile window.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="ui.profile.UiProfile">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ui.profile.</span></span><span class="sig-name descname"><span class="pre">UiProfile</span></span><a class="reference internal" href="_modules/ui/profile.html#UiProfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ui.profile.UiProfile" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Build user interface class of Profile window.</p>
+<p>This class was automatically generated by PyQt.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ui.profile.UiProfile.retranslateUi">
+<span class="sig-name descname"><span class="pre">retranslateUi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MainWindow</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ui/profile.html#UiProfile.retranslateUi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ui.profile.UiProfile.retranslateUi" title="Permalink to this definition">#</a></dt>
+<dd><p>Method that setup text titles to window and fields.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>MainWindow</strong> – window where need to construct interface.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui.profile.UiProfile.setupUi">
+<span class="sig-name descname"><span class="pre">setupUi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MainWindow</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ui/profile.html#UiProfile.setupUi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ui.profile.UiProfile.setupUi" title="Permalink to this definition">#</a></dt>
+<dd><p>Method that init and place all parts of user interface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>MainWindow</strong> – window where need to construct interface.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-ui.settings">
+<span id="ui-settings-module"></span><h2>ui.settings module<a class="headerlink" href="#module-ui.settings" title="Permalink to this heading">#</a></h2>
+<p>File that implements user interface building of Settings window.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="ui.settings.UiSettings">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ui.settings.</span></span><span class="sig-name descname"><span class="pre">UiSettings</span></span><a class="reference internal" href="_modules/ui/settings.html#UiSettings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ui.settings.UiSettings" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Build user interface class of Settings window.</p>
+<p>This class was automatically generated by PyQt.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ui.settings.UiSettings.retranslateUi">
+<span class="sig-name descname"><span class="pre">retranslateUi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MainWindow</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ui/settings.html#UiSettings.retranslateUi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ui.settings.UiSettings.retranslateUi" title="Permalink to this definition">#</a></dt>
+<dd><p>Method that setup text titles to window and fields.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>MainWindow</strong> – window where need to construct interface.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui.settings.UiSettings.setupUi">
+<span class="sig-name descname"><span class="pre">setupUi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MainWindow</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ui/settings.html#UiSettings.setupUi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ui.settings.UiSettings.setupUi" title="Permalink to this definition">#</a></dt>
+<dd><p>Method that init and place all parts of user interface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>MainWindow</strong> – window where need to construct interface.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-ui.sign_in">
+<span id="ui-sign-in-module"></span><h2>ui.sign_in module<a class="headerlink" href="#module-ui.sign_in" title="Permalink to this heading">#</a></h2>
+<p>File that implements user interface building of Sing In window.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="ui.sign_in.UiSignIn">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ui.sign_in.</span></span><span class="sig-name descname"><span class="pre">UiSignIn</span></span><a class="reference internal" href="_modules/ui/sign_in.html#UiSignIn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ui.sign_in.UiSignIn" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Build user interface class of Sign In window.</p>
+<p>This class was automatically generated by PyQt.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ui.sign_in.UiSignIn.retranslateUi">
+<span class="sig-name descname"><span class="pre">retranslateUi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MainWindow</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ui/sign_in.html#UiSignIn.retranslateUi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ui.sign_in.UiSignIn.retranslateUi" title="Permalink to this definition">#</a></dt>
+<dd><p>Method that setup text titles to window and fields.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>MainWindow</strong> – window where need to construct interface.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui.sign_in.UiSignIn.setupUi">
+<span class="sig-name descname"><span class="pre">setupUi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MainWindow</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ui/sign_in.html#UiSignIn.setupUi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ui.sign_in.UiSignIn.setupUi" title="Permalink to this definition">#</a></dt>
+<dd><p>Method that init and place all parts of user interface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>MainWindow</strong> – window where need to construct interface.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-ui.sign_up">
+<span id="ui-sign-up-module"></span><h2>ui.sign_up module<a class="headerlink" href="#module-ui.sign_up" title="Permalink to this heading">#</a></h2>
+<p>File that implements user interface building of Sign Up window.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="ui.sign_up.UiSignUp">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ui.sign_up.</span></span><span class="sig-name descname"><span class="pre">UiSignUp</span></span><a class="reference internal" href="_modules/ui/sign_up.html#UiSignUp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ui.sign_up.UiSignUp" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Build user interface class of Sign Up window.</p>
+<p>This class was automatically generated by PyQt.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ui.sign_up.UiSignUp.retranslateUi">
+<span class="sig-name descname"><span class="pre">retranslateUi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MainWindow</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ui/sign_up.html#UiSignUp.retranslateUi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ui.sign_up.UiSignUp.retranslateUi" title="Permalink to this definition">#</a></dt>
+<dd><p>Method that setup text titles to window and fields.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>MainWindow</strong> – window where need to construct interface.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui.sign_up.UiSignUp.setupUi">
+<span class="sig-name descname"><span class="pre">setupUi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MainWindow</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ui/sign_up.html#UiSignUp.setupUi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ui.sign_up.UiSignUp.setupUi" title="Permalink to this definition">#</a></dt>
+<dd><p>Method that init and place all parts of user interface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>MainWindow</strong> – window where need to construct interface.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-ui">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ui" title="Permalink to this heading">#</a></h2>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="user_data.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">user_data package</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="main.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">main module</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2023, Matvey Baryshev
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">ui package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-ui.about">ui.about module</a><ul>
+<li><a class="reference internal" href="#ui.about.UiAbout"><code class="docutils literal notranslate"><span class="pre">UiAbout</span></code></a><ul>
+<li><a class="reference internal" href="#ui.about.UiAbout.retranslateUi"><code class="docutils literal notranslate"><span class="pre">UiAbout.retranslateUi()</span></code></a></li>
+<li><a class="reference internal" href="#ui.about.UiAbout.setupUi"><code class="docutils literal notranslate"><span class="pre">UiAbout.setupUi()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-ui.confirm_dialog">ui.confirm_dialog module</a><ul>
+<li><a class="reference internal" href="#ui.confirm_dialog.UiConfirm"><code class="docutils literal notranslate"><span class="pre">UiConfirm</span></code></a><ul>
+<li><a class="reference internal" href="#ui.confirm_dialog.UiConfirm.retranslateUi"><code class="docutils literal notranslate"><span class="pre">UiConfirm.retranslateUi()</span></code></a></li>
+<li><a class="reference internal" href="#ui.confirm_dialog.UiConfirm.setupUi"><code class="docutils literal notranslate"><span class="pre">UiConfirm.setupUi()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-ui.icons_rc">ui.icons_rc module</a><ul>
+<li><a class="reference internal" href="#ui.icons_rc.qCleanupResources"><code class="docutils literal notranslate"><span class="pre">qCleanupResources()</span></code></a></li>
+<li><a class="reference internal" href="#ui.icons_rc.qInitResources"><code class="docutils literal notranslate"><span class="pre">qInitResources()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-ui.main_menu">ui.main_menu module</a><ul>
+<li><a class="reference internal" href="#ui.main_menu.UiMainWindow"><code class="docutils literal notranslate"><span class="pre">UiMainWindow</span></code></a><ul>
+<li><a class="reference internal" href="#ui.main_menu.UiMainWindow.retranslateUi"><code class="docutils literal notranslate"><span class="pre">UiMainWindow.retranslateUi()</span></code></a></li>
+<li><a class="reference internal" href="#ui.main_menu.UiMainWindow.setupUi"><code class="docutils literal notranslate"><span class="pre">UiMainWindow.setupUi()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-ui.profile">ui.profile module</a><ul>
+<li><a class="reference internal" href="#ui.profile.UiProfile"><code class="docutils literal notranslate"><span class="pre">UiProfile</span></code></a><ul>
+<li><a class="reference internal" href="#ui.profile.UiProfile.retranslateUi"><code class="docutils literal notranslate"><span class="pre">UiProfile.retranslateUi()</span></code></a></li>
+<li><a class="reference internal" href="#ui.profile.UiProfile.setupUi"><code class="docutils literal notranslate"><span class="pre">UiProfile.setupUi()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-ui.settings">ui.settings module</a><ul>
+<li><a class="reference internal" href="#ui.settings.UiSettings"><code class="docutils literal notranslate"><span class="pre">UiSettings</span></code></a><ul>
+<li><a class="reference internal" href="#ui.settings.UiSettings.retranslateUi"><code class="docutils literal notranslate"><span class="pre">UiSettings.retranslateUi()</span></code></a></li>
+<li><a class="reference internal" href="#ui.settings.UiSettings.setupUi"><code class="docutils literal notranslate"><span class="pre">UiSettings.setupUi()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-ui.sign_in">ui.sign_in module</a><ul>
+<li><a class="reference internal" href="#ui.sign_in.UiSignIn"><code class="docutils literal notranslate"><span class="pre">UiSignIn</span></code></a><ul>
+<li><a class="reference internal" href="#ui.sign_in.UiSignIn.retranslateUi"><code class="docutils literal notranslate"><span class="pre">UiSignIn.retranslateUi()</span></code></a></li>
+<li><a class="reference internal" href="#ui.sign_in.UiSignIn.setupUi"><code class="docutils literal notranslate"><span class="pre">UiSignIn.setupUi()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-ui.sign_up">ui.sign_up module</a><ul>
+<li><a class="reference internal" href="#ui.sign_up.UiSignUp"><code class="docutils literal notranslate"><span class="pre">UiSignUp</span></code></a><ul>
+<li><a class="reference internal" href="#ui.sign_up.UiSignUp.retranslateUi"><code class="docutils literal notranslate"><span class="pre">UiSignUp.retranslateUi()</span></code></a></li>
+<li><a class="reference internal" href="#ui.sign_up.UiSignUp.setupUi"><code class="docutils literal notranslate"><span class="pre">UiSignUp.setupUi()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-ui">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/scripts/furo.js"></script>
+    </body>
+</html>
