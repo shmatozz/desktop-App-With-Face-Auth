@@ -1,5 +1,5 @@
 """
-File that implements all backend methods for Sign In window.
+File that implements all methods for Sign In window correct working.
 """
 
 import psycopg2                             # PostgreSQL working lib
@@ -7,7 +7,7 @@ import cv2                                  # camera capture lib
 from torch import dist                      # distance between two photo tensors
 from PIL import Image                       # image class for networks
 from PyQt6.QtWidgets import QMainWindow     # PyQt QMainWindow class for inheritance
-from ui.sign_in import UiSignIn          # sign in ui
+from ui.sign_in import UiSignIn             # sign in ui
 from windows.sign_up_window import SignUp   # sign up class
 from windows.main_window import MainWindow  # main window class
 from windows.styles import *                # window styles and resources
@@ -16,7 +16,7 @@ from facenet_pytorch import MTCNN, InceptionResnetV1  # networks for face auth
 
 class SignIn(QMainWindow):
     """
-    Backend of sign in window.
+    Backend of Sign In window.
 
     This class implements methods for Sign In window working.
     """
@@ -175,7 +175,9 @@ class SignIn(QMainWindow):
     # establish database connection
     @staticmethod
     def connect_to_db():
-        """ Establish connection with users database. """
+        """
+        Establish connection with users database.
+        """
         return psycopg2.connect(host="127.0.0.1",       # local host address
                                 user="postgres",        # username
                                 password="1234567890",  # user password

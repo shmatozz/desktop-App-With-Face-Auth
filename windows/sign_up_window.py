@@ -1,10 +1,10 @@
 """
-File that implements all backend methods for Sign Up window.
+File that implements all methods for Sign Up window correct working.
 """
 
 import psycopg2                                       # PostgreSQL working lib
 from PyQt6.QtWidgets import QMainWindow, QFileDialog  # PyQt classes for inheritance
-from ui.sign_up import UiSignUp                    # sign up ui
+from ui.sign_up import UiSignUp                       # sign up ui
 from windows.styles import *                          # window styles and resources
 from facenet_pytorch import MTCNN                     # network for face detection
 from PIL import Image                                 # image class for networks

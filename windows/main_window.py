@@ -1,12 +1,11 @@
 """
-File that implements all backend methods for Main Menu window.
+File that implements all methods for Main Menu window correct working.
 """
 
 import psycopg2                                                           # PostgreSQL working lib
 from PIL import Image, ImageDraw                                          # image class for networks
-from PyQt6 import QtGui, QtCore                                           # PyQt packages
-from PyQt6.QtCore import QPropertyAnimation, QUrl                         # PyQt animation
-from PyQt6.QtGui import QDesktopServices
+from PyQt6.QtCore import QPropertyAnimation, QUrl, Qt, QEvent             # PyQt
+from PyQt6.QtGui import QDesktopServices, QIcon, QPixmap
 from PyQt6.QtWidgets import QMainWindow, QLineEdit, QDialog, QFileDialog  # PyQt ui classes
 from ui.about import UiAbout                                              # about window ui
 from ui.confirm_dialog import UiConfirm                                   # confirm window ui
@@ -26,19 +25,21 @@ class Dialog(QDialog):
     def __init__(self, ok, cancel):
         """
         Initialization of confirm dialog window.
+        :param ok: function that connects to "OK" button.
+        :param cancel: function that connects to "Cancel" button.
         """
         super(Dialog, self).__init__()                                  # init QDialog class
         self.ui = UiConfirm()                                           # init confirm window ui
         self.ui.setupUi(self)                                           # setup ui
         self.ui.ok_button.clicked.connect(ok)                           # connect ok button
         self.ui.cancel_button.clicked.connect(cancel)                   # connect cancel button
-        self.setWindowFlags(QtCore.Qt.WindowType.FramelessWindowHint)   # set window type to hide title bar
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)   # set window type to hide title bar
 
 
 # main window
 class MainWindow(QMainWindow):
     """
-    Backend of application main window.
+    Backend of Main Menu window.
 
     This class implements methods for main menu window working.
     """
@@ -105,7 +106,7 @@ class MainWindow(QMainWindow):
             if width == 0:
                 self.ui.button_2.setMinimumWidth(0)
             new_width = 170
-            self.ui.button.setIcon(QtGui.QIcon(":/icons/icons/arrow_left.svg"))
+            self.ui.button.setIcon(QIcon(":/icons/icons/arrow_left.svg"))
             # show text on buttons
             self.ui.menu_label.setMinimumWidth(120)
             self.ui.profile.setMinimumWidth(150)
@@ -119,7 +120,7 @@ class MainWindow(QMainWindow):
         # if current width = 170 -> menu is open, setup new width for closing animation
         else:
             new_width = 60
-            self.ui.button.setIcon(QtGui.QIcon(":/icons/icons/menu.svg"))
+            self.ui.button.setIcon(QIcon(":/icons/icons/menu.svg"))
             # hide text on buttons
             self.ui.menu_label.setMinimumWidth(0)
             self.ui.profile.setMinimumWidth(40)
@@ -181,9 +182,9 @@ class MainWindow(QMainWindow):
                             draw.rectangle((p - 5).tolist() + (p + 5).tolist(), width=8)
                     img_draw.save('user_data/detected_faces.png')
                     # output image on main window
-                    image = QtGui.QPixmap('user_data/detected_faces.png')
+                    image = QPixmap('user_data/detected_faces.png')
                     if image.width() > 665 or image.height() > 576:
-                        image = image.scaled(665, 576, QtCore.Qt.AspectRatioMode.KeepAspectRatio)
+                        image = image.scaled(665, 576, Qt.AspectRatioMode.KeepAspectRatio)
                     self.ui.image_output.setMinimumWidth(1)
                     self.ui.image_output.setMaximumWidth(image.width())
                     self.ui.image_output.setMaximumHeight(image.height())
@@ -210,7 +211,7 @@ class MainWindow(QMainWindow):
         self.ui.surname_line.setText(self.user_data["surname"])                  # set surname
         self.ui.email_line.setText(self.user_data["email"])                      # set email
         self.ui.login_line.setText(self.user_data["login"])                      # set login
-        self.ui.user_photo.setPixmap(QtGui.QPixmap("user_data/user_photo.png"))  # set user photo
+        self.ui.user_photo.setPixmap(QPixmap("user_data/user_photo.png"))  # set user photo
 
         # connect buttons of new ui
         self.ui.chanhe_password.clicked.connect(self.change_password)        # opens field for entering new password
@@ -228,7 +229,7 @@ class MainWindow(QMainWindow):
         This method ask user to upload new user profile image.
         """
         # if mouse click on photo icon -> open file dialog to select new photo
-        if event.type() == QtCore.QEvent.Type.MouseButtonPress:
+        if event.type() == QEvent.Type.MouseButtonPress:
             # configure and open file dialog window
             dialog = QFileDialog(self)
             dialog.setDirectory(r'C:')
@@ -241,7 +242,7 @@ class MainWindow(QMainWindow):
                 # if filename != None (file was selected) -> upload photo
                 if filename:
                     copy(filename[0], "user_data/user_photo.png")       # copy selected image to user data
-                    pixmap = QtGui.QPixmap("user_data/user_photo.png")  # setup selected image to user profile
+                    pixmap = QPixmap("user_data/user_photo.png")  # setup selected image to user profile
                     self.profile.user_photo.setPixmap(pixmap)           #
                     # save selected image to users database
                     try:
@@ -282,12 +283,12 @@ class MainWindow(QMainWindow):
         if self.profile.password_line.echoMode() == QLineEdit.EchoMode.Password:
             self.profile.password_line.setEchoMode(QLineEdit.EchoMode.Normal)
             self.profile.password2_line.setEchoMode(QLineEdit.EchoMode.Normal)
-            self.profile.vis_button.setIcon(QtGui.QIcon(":/icons/icons/view.svg"))
+            self.profile.vis_button.setIcon(QIcon(":/icons/icons/view.svg"))
         # if current password line echo mode = normal -> change to password echo mode
         else:
             self.profile.password_line.setEchoMode(QLineEdit.EchoMode.Password)
             self.profile.password2_line.setEchoMode(QLineEdit.EchoMode.Password)
-            self.profile.vis_button.setIcon(QtGui.QIcon(":/icons/icons/view_off.svg"))
+            self.profile.vis_button.setIcon(QIcon(":/icons/icons/view_off.svg"))
 
     # saving data to users database
     def save_data(self):
