@@ -14,6 +14,7 @@ class UiConfirm(object):
     def setupUi(self, Dialog):
         """
         Method that init and place all parts of user interface.
+
         :param Dialog: window where need to construct interface.
         """
         Dialog.setObjectName("Dialog")
@@ -112,6 +113,7 @@ class UiConfirm(object):
     def retranslateUi(self, Dialog):
         """
         Method that setup text titles to window and fields.
+
         :param Dialog: window where need to construct interface.
         """
         _translate = QtCore.QCoreApplication.translate

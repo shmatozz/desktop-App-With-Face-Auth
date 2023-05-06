@@ -14,6 +14,7 @@ class UiAbout(object):
     def setupUi(self, About):
         """
         Method that init and place all parts of user interface.
+
         :param About: window where need to construct interface.
         """
         About.setObjectName("About")
@@ -118,6 +119,7 @@ class UiAbout(object):
     def retranslateUi(self, About):
         """
         Method that setup text titles to window and fields.
+
         :param About: window where need to construct interface.
         """
         _translate = QtCore.QCoreApplication.translate

@@ -15,6 +15,7 @@ class UiMainWindow(object):
     def setupUi(self, MainWindow):
         """
         Method that init and place all parts of user interface.
+
         :param MainWindow: window where need to construct interface.
         """
         icons_rc.qInitResources()
@@ -452,6 +453,7 @@ class UiMainWindow(object):
     def retranslateUi(self, MainWindow):
         """
         Method that setup text titles to window and fields.
+
         :param MainWindow: window where need to construct interface.
         """
         _translate = QtCore.QCoreApplication.translate

@@ -11,9 +11,13 @@ from user_data.data import *                # logged user data
 
 def main():
     """ Main function.
+
     Init application window.
+
     If user was already logged -> init main menu window,
+
     else -> init sing in window
+
     :return: Zero on successful program and app finishing
     """
     app = QApplication(sys.argv)  # init app
