@@ -214,7 +214,7 @@ class MainWindow(QMainWindow):
         self.ui.user_photo.setPixmap(QPixmap("user_data/user_photo.png"))  # set user photo
 
         # connect buttons of new ui
-        self.ui.chanhe_password.clicked.connect(self.change_password)        # opens field for entering new password
+        self.ui.change_password.clicked.connect(self.change_password)        # opens field for entering new password
         self.ui.save_button.clicked.connect(self.save_data)                  # save info to users database
         self.ui.back.clicked.connect(self.back_to_main)                      # returns back to main window
         self.ui.exit_button.clicked.connect(self.exit_from_account)          # exit from user account

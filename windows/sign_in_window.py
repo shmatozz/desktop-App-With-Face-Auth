@@ -35,8 +35,8 @@ class SignIn(QMainWindow):
         self.setWindowTitle("Log In")
 
         # connect buttons with methods
-        self.ui.SignInButton.clicked.connect(self.sign_in)      # sign in account button
-        self.ui.SignUpButton.clicked.connect(self.open_sign_up)  # open sign up window button
+        self.ui.signin_button.clicked.connect(self.sign_in)      # sign in account button
+        self.ui.signup_button.clicked.connect(self.open_sign_up)  # open sign up window button
 
     # sign in account button pressed
     def sign_in(self):

@@ -31,9 +31,9 @@ class SignUp(QMainWindow):
         self.setWindowTitle("Sign Up")
 
         # connect buttons with methods
-        self.ui.backButton.clicked.connect(self.back)       # back to sign in button
-        self.ui.SingUpButton.clicked.connect(self.sign_up)  # sign up button
-        self.ui.uploadButton.clicked.connect(self.upload)   # upload photo button
+        self.ui.back_button.clicked.connect(self.back)       # back to sign in button
+        self.ui.signup_button.clicked.connect(self.sign_up)  # sign up button
+        self.ui.upload_button.clicked.connect(self.upload)   # upload photo button
 
     # sign up button pressed
     def sign_up(self):
@@ -126,10 +126,10 @@ class SignUp(QMainWindow):
                 face, prob = mtcnn(img, return_prob=True)      # pass photo to mtcnn
                 # if no face detected or confidence of network < 95% -> inform user of incorrect photo
                 if face is None or prob < 0.95:
-                    self.ui.uploadMes.setText(INCORRECT_PHOTO)  # inform user
+                    self.ui.upload_mes.setText(INCORRECT_PHOTO)  # inform user
                 # if face detected -> copy selected photo to user data
                 else:
-                    self.ui.uploadMes.setText(OK_PHOTO)        # inform user
+                    self.ui.upload_mes.setText(OK_PHOTO)        # inform user
                     self.face_auth = True                      # set face auth flag = True
                     copy(filename[0], "user_data/face_photo.png")  # copy photo to user data
 
