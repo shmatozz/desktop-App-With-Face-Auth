@@ -589,7 +589,7 @@ class MainWindow(QMainWindow):
         """
         Establish connection with users database.
         """
-        return psycopg2.connect(host="127.0.0.1",
+        return psycopg2.connect(host="db.dkadcfuknosrclhomisf.supabase.co",
                                 user="postgres",
-                                password="1234567890",
-                                database="app_users")
+                                password="verifacetion123",
+                                database="postgres")

@@ -178,7 +178,7 @@ class SignIn(QMainWindow):
         """
         Establish connection with users database.
         """
-        return psycopg2.connect(host="127.0.0.1",       # local host address
-                                user="postgres",        # username
-                                password="1234567890",  # user password
-                                database="app_users")   # database name
+        return psycopg2.connect(host="db.dkadcfuknosrclhomisf.supabase.co",
+                                user="postgres",
+                                password="verifacetion123",
+                                database="postgres")
