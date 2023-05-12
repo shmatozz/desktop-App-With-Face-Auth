@@ -169,7 +169,7 @@ class MainWindow(QMainWindow):
             filename = dialog.selectedFiles()
             # if any file was selected -> check it for face
             if filename:
-                mtcnn = MTCNN(keep_all=True)   # init detection model
+                mtcnn = MTCNN(image_size=1000, keep_all=True, min_face_size=100)   # init detection model
                 img = Image.open(filename[0])
                 boxes, probs, points = mtcnn.detect(img, landmarks=True)  # get face boxes and probabilities
                 # if any face detected -> mark them on image and output to user
@@ -477,7 +477,7 @@ class MainWindow(QMainWindow):
             filename = dialog.selectedFiles()
             # if any file was selected -> check it for face
             if filename:
-                mtcnn = MTCNN(image_size=1000, margin=0, min_face_size=20)  # initializing mtcnn for face detection
+                mtcnn = MTCNN(image_size=640, margin=0, min_face_size=200)  # initializing mtcnn for face detection
                 img = Image.open(filename[0])
                 face, prob = mtcnn(img, return_prob=True, save_path="user_data/face_photo.png")
                 # if face was not detected or ensurance of network < 95% -> inform user about incorrect photo

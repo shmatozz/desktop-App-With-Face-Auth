@@ -32,6 +32,8 @@ class SignIn(QMainWindow):
         self.ui = UiSignIn()            # init sign in ui (current window)
         self.ui.setupUi(self)           # setup sign in ui (current window)
         self.cam = cv2.VideoCapture(0)  # init cam for face auth
+        self.cam.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
+        self.cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
         self.setWindowTitle("Log In")
 
         # connect buttons with methods
@@ -98,7 +100,7 @@ class SignIn(QMainWindow):
             self.ui.helloTitle.setText(PROCESSING_FACE_AUTH)
             count_success = self.face_authentication(info)
             # if at least 1 try was successful -> remember current user data and open main window
-            if count_success > 0:
+            if count_success > 2:
                 # if user press remember me flag -> remember user data
                 if self.ui.remember_me_check.isChecked():
                     with open("user_data/data.py", "w") as datafile:  # write current data to data file
@@ -124,13 +126,13 @@ class SignIn(QMainWindow):
         """
         with open("user_data/face_photo.png", "wb") as photo:  # binary write database photo to current user data
             photo.write(info[2])
-        mtcnn = MTCNN(image_size=1000, margin=0, min_face_size=20)        # init mtcnn for face detection
+        mtcnn = MTCNN(image_size=640, margin=0, min_face_size=200)        # init mtcnn for face detection
         resnet = InceptionResnetV1(pretrained='vggface2').eval()          # init resnet for face to embedding conversion
         face_database = mtcnn(Image.open("user_data/face_photo.png"))     # pass face from user database
         emb_database = resnet(face_database.unsqueeze(0)).detach()        # get embedding matrix
         count_trys = 0                                                    # init try count of face auth
         count_success = 0                                                 # init successful try count of face auth
-        while count_trys < 2 and count_success == 0:
+        while count_trys < 5 and count_success < 3:
             result, image = self.cam.read()                               # get image from camera
             cv2.imwrite("user_data/face_photo.png", image)                # write image to user face
             face_current = mtcnn(Image.open("user_data/face_photo.png"))  # get cropped face of user
@@ -140,7 +142,7 @@ class SignIn(QMainWindow):
                 distance = dist(emb_current, emb_database).item()         # calculate distance
                 print(distance)
                 # if distance is rather small -> inc success count
-                if distance < 0.45:
+                if distance < 0.5:
                     count_success += 1
             count_trys += 1
 

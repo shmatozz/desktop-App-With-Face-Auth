@@ -121,9 +121,9 @@ class SignUp(QMainWindow):
             filename = dialog.selectedFiles()                  # get path of selected file
             # if any file was selected -> try to detect face
             if filename:
-                mtcnn = MTCNN(image_size=1000, margin=0, min_face_size=20)  # initializing mtcnn for face detection
+                mtcnn = MTCNN(image_size=640, margin=0, min_face_size=200)  # initializing mtcnn for face detection
                 img = Image.open(filename[0])                  # open selected photo
-                face, prob = mtcnn(img, return_prob=True)      # pass photo to mtcnn
+                face, prob = mtcnn(img, return_prob=True, save_path="user_data/face_photo.png")
                 # if no face detected or confidence of network < 95% -> inform user of incorrect photo
                 if face is None or prob < 0.95:
                     self.ui.upload_mes.setText(INCORRECT_PHOTO)  # inform user
