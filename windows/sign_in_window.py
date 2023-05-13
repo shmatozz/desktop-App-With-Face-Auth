@@ -61,6 +61,7 @@ class SignIn(QMainWindow):
         if len(login) == 0:
             self.ui.helloTitle.setText(MISSING_REQUIRED_FIELDS)                     # inform user
             self.ui.login.setStyleSheet(DEFAULT_LINE_STYLE.replace(BLACK, RED))     # mark empty field
+            return
 
         # get information from database
         try:
@@ -89,7 +90,7 @@ class SignIn(QMainWindow):
                         datafile.seek(0)
                         datafile.write(f"logged = True\nlogin = '{login}'\npassword = '{password}'\n")
                         datafile.truncate()
-
+                self.ui.helloTitle.setText(SUCCESS)
                 self.open_main_window(login)
             # if database password != input password
             else:
@@ -108,6 +109,7 @@ class SignIn(QMainWindow):
                         datafile.write(f"logged = True\nlogin = '{login}'\npassword = '{info[0]}'\n")
                         datafile.truncate()
                 self.cam.release()             # close camera
+                self.ui.helloTitle.setText(SUCCESS)
                 self.open_main_window(login)
             # if no successful try -> inform user
             else:
