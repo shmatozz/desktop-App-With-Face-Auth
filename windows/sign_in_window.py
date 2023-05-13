@@ -32,8 +32,8 @@ class SignIn(QMainWindow):
         self.ui = UiSignIn()            # init sign in ui (current window)
         self.ui.setupUi(self)           # setup sign in ui (current window)
         self.cam = cv2.VideoCapture(0)  # init cam for face auth
-        self.cam.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
-        self.cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
+        self.cam.set(cv2.CAP_PROP_FRAME_WIDTH, 1200)
+        self.cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 800)
         self.setWindowTitle("Log In")
 
         # connect buttons with methods
@@ -126,7 +126,7 @@ class SignIn(QMainWindow):
         """
         with open("user_data/face_photo.png", "wb") as photo:  # binary write database photo to current user data
             photo.write(info[2])
-        mtcnn = MTCNN(image_size=640, margin=0, min_face_size=200)        # init mtcnn for face detection
+        mtcnn = MTCNN(image_size=160, margin=0, min_face_size=10)        # init mtcnn for face detection
         resnet = InceptionResnetV1(pretrained='vggface2').eval()          # init resnet for face to embedding conversion
         face_database = mtcnn(Image.open("user_data/face_photo.png"))     # pass face from user database
         emb_database = resnet(face_database.unsqueeze(0)).detach()        # get embedding matrix
