@@ -10,9 +10,9 @@ mtcnn500 = MTCNN(image_size=500, margin=0, min_face_size=10)
 mtcnn640 = MTCNN(image_size=750, margin=0, min_face_size=10)
 mtcnn1000 = MTCNN(image_size=1000, margin=0, min_face_size=10)
 
-database_photo_path = "test/db.jpg"
-test_photo_true_path = "test/test_true.jpg"
-test_photo_false_path = "test/test_false.jpg"
+database_photo_path = "test_images/db.jpg"
+test_photo_true_path = "test_images/test_true.jpg"
+test_photo_false_path = "test_images/test_false.jpg"
 
 database_photo = Image.open(database_photo_path)
 test_photo_true = Image.open(test_photo_true_path)
