@@ -5,6 +5,7 @@ File that implements all methods for Sign Up window correct working.
 import psycopg2                                       # PostgreSQL working lib
 from PyQt6.QtWidgets import QMainWindow, QFileDialog  # PyQt classes for inheritance
 from ui.sign_up import UiSignUp                       # sign up ui
+from windows import connect_to_db
 from windows.styles import *                          # window styles and resources
 from facenet_pytorch import MTCNN                     # network for face detection
 from PIL import Image                                 # image class for networks
@@ -65,7 +66,7 @@ class SignUp(QMainWindow):
             # if passwords ok -> try to connect to user database
             else:
                 try:
-                    connection = self.connect_to_db()    # establish connection
+                    connection = connect_to_db()    # establish connection
                     with connection.cursor() as cursor:  # init cursor to execute PostgreSQL command
                         # execute PostgreSQL command (select login)
                         cursor.execute(f"select login from users where login = '{login}'")
@@ -150,14 +151,3 @@ class SignUp(QMainWindow):
         self.ui.login.setStyleSheet(DEFAULT_LINE_STYLE)        # reset login field
         self.ui.password.setStyleSheet(DEFAULT_LINE_STYLE)     # reset password field
         self.ui.passwordRep.setStyleSheet(DEFAULT_LINE_STYLE)  # reset repeat password field
-
-    # establish database connection
-    @staticmethod
-    def connect_to_db():
-        """
-        Establish connection with users database.
-        """
-        return psycopg2.connect(host="db.dkadcfuknosrclhomisf.supabase.co",
-                                user="postgres",
-                                password="verifacetion123",
-                                database="postgres")

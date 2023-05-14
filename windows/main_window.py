@@ -12,6 +12,7 @@ from ui.confirm_dialog import UiConfirm                                   # conf
 from ui.main_menu import UiMainWindow                                     # main window ui
 from ui.profile import UiProfile                                          # profile ui
 from ui.settings import UiSettings                                        # settings ui
+from windows import connect_to_db
 from windows.styles import *                                              # window styles and resources
 from shutil import copy                                                   # function for copying photos
 from facenet_pytorch import MTCNN                                         # network for face detection
@@ -246,7 +247,7 @@ class MainWindow(QMainWindow):
                     self.profile.user_photo.setPixmap(pixmap)           #
                     # save selected image to users database
                     try:
-                        connection = self.connect_to_db()    # establish connection to database
+                        connection = connect_to_db()    # establish connection to database
                         with connection.cursor() as cursor:  # init cursor to execute PostgreSQL command
                             drawing = open("user_data/user_photo.png", 'rb').read()
                             # update user photo by login
@@ -302,8 +303,10 @@ class MainWindow(QMainWindow):
         email = self.profile.email_line.text()            # get new email
         login = self.profile.login_line.text()            # get new login
         new_password = self.profile.password_line.text()  # get new password
+        new_password_rep = self.profile.password2_line.text()
         # if new password entered -> select new, else select password from user data
         new_password = new_password if len(new_password) > 0 else self.user_data["password"]
+        new_password_rep = new_password_rep if len(new_password_rep) > 0 else self.user_data["password"]
 
         # if OK pressed in dialog window -> save info to users database
         def ok_pressed():
@@ -313,7 +316,7 @@ class MainWindow(QMainWindow):
             This function execute SQL command to save input lines in user database.
             """
             try:
-                connection = self.connect_to_db()    # establish connection to database
+                connection = connect_to_db()    # establish connection to database
                 with connection.cursor() as cursor:  # init cursor to execute PostgreSQL command
                     # select login by login
                     cursor.execute(f"select login from users where login = '{login}'")
@@ -359,9 +362,13 @@ class MainWindow(QMainWindow):
             """
             self.dialog.close()  # close confirm dialog window
 
-        # open dialog window
-        self.dialog = Dialog(ok_pressed, cancel_pressed)  # init confirm dialog window
-        self.dialog.show()                                # show confirm dialog window
+        if new_password == new_password_rep:
+            # open dialog window
+            self.dialog = Dialog(ok_pressed, cancel_pressed)  # init confirm dialog window
+            self.dialog.show()                                # show confirm dialog window
+        else:
+            self.profile.password_line.setStyleSheet(DEFAULT_LINE_STYLE.replace(BLACK, RED))
+            self.profile.password2_line.setStyleSheet(DEFAULT_LINE_STYLE.replace(BLACK, RED))
 
     # returns back to main menu
     def back_to_main(self):
@@ -502,7 +509,7 @@ class MainWindow(QMainWindow):
         # if settings changed flag was marked -> save changes to database
         if self.settings_changed:
             try:
-                connection = self.connect_to_db()    # connect to database
+                connection = connect_to_db()    # connect to database
                 with connection.cursor() as cursor:  # init cursor
                     # update users database with face auth flag and user face photo
                     cursor.execute(f"update users "
@@ -549,7 +556,7 @@ class MainWindow(QMainWindow):
         :param login: user login used to sign in app.
         """
         try:
-            connect = self.connect_to_db()
+            connect = connect_to_db()
             with connect.cursor() as cursor:
                 cursor.execute(f"select * from users where login = '{login}'")
                 info = cursor.fetchone()    # info[0] = user id
@@ -582,14 +589,3 @@ class MainWindow(QMainWindow):
             connect.close()
         except psycopg2.Error:
             print("[INFO] database error")
-
-    # establish connection to database
-    @staticmethod
-    def connect_to_db():
-        """
-        Establish connection with users database.
-        """
-        return psycopg2.connect(host="db.dkadcfuknosrclhomisf.supabase.co",
-                                user="postgres",
-                                password="verifacetion123",
-                                database="postgres")

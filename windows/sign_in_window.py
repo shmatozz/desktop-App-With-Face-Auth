@@ -8,6 +8,7 @@ from torch import dist                      # distance between two photo tensors
 from PIL import Image                       # image class for networks
 from PyQt6.QtWidgets import QMainWindow     # PyQt QMainWindow class for inheritance
 from ui.sign_in import UiSignIn             # sign in ui
+from windows import connect_to_db
 from windows.sign_up_window import SignUp   # sign up class
 from windows.main_window import MainWindow  # main window class
 from windows.styles import *                # window styles and resources
@@ -65,7 +66,7 @@ class SignIn(QMainWindow):
 
         # get information from database
         try:
-            connection = self.connect_to_db()       # establish connection
+            connection = connect_to_db()       # establish connection
             with connection.cursor() as cursor:     # init cursor to execute PostgreSQL command
                 # execute PostgreSQL command (select user password, face auth flag, user face photo)
                 cursor.execute(f"select password, enable_face_auth, user_face from users where login = '{login}'")
@@ -175,14 +176,3 @@ class SignIn(QMainWindow):
         self.ui.login.setStyleSheet(DEFAULT_LINE_STYLE)        # reset login styles
         self.ui.password.setStyleSheet(DEFAULT_LINE_STYLE)     # reset password styles
         self.ui.helloTitle.setStyleSheet(DEFAULT_TITLE_STYLE)  # reset title styles
-
-    # establish database connection
-    @staticmethod
-    def connect_to_db():
-        """
-        Establish connection with users database.
-        """
-        return psycopg2.connect(host="db.dkadcfuknosrclhomisf.supabase.co",
-                                user="postgres",
-                                password="verifacetion123",
-                                database="postgres")
