@@ -59,7 +59,7 @@ List of application windows:
 ## Account login window
 
 <p align="center">
-<img height="684" src="artefacts/signin.png" width="466" alt="Sign In window"/>
+<img height="456" src="artefacts/signin.png" width="312" alt="Sign In window"/>
 </p>
 
 Available interface elements:
@@ -73,8 +73,8 @@ Available interface elements:
 ## Account registration window
 
 <p align="center">
-<img height="684" src="artefacts/signup.png" width="466" alt="Sign Up window"/>
-<img height="684" src="artefacts/signup2.png" width="466" alt="Sign Up window"/>
+<img height="456" src="artefacts/signup.png" width="312" alt="Sign Up window"/>
+<img height="456" src="artefacts/signup2.png" width="312" alt="Sign Up window"/>
 </p>
 
 Available interface elements:
