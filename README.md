@@ -37,17 +37,19 @@ To achieve the goal, the following tasks were performed:
 
 # Description of software system
 
-This project includes the implementation of the application by creating several separate independent windows created using the PyQt6 framework and Qt Designer. 
+This project includes the implementation of the application by creating several independent windows created using the PyQt6 framework and Qt Designer. 
 This application structure was chosen to improve the readability and perception of the code. 
 Each window has its own class and file, therefore, all methods implemented in the class will apply only to a specific window. 
 Also, the user interface and the implementation of the methods of each window were divided into different classes and files to improve the readability of the code.
 
 List of application windows:
-* **[Account login window](#acount-login-window)** – a window for entering a username and password (or face identification).
+* **[Account login window](#account-login-window)** – a window for entering a username and password (or face identification).
 * **[Account registration window](#account-registration-window)** – a window for creating a new account in the system.
 * **[Main application window](#main-application-window)** – application window for system navigation (profile view, application settings, etc.)
 
 ## Account login window
+
+<img height="228" src="artefacts/signin.png" width="156" alt="Sign In window"/>
 
 ## Account registration window
 
