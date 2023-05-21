@@ -1,6 +1,10 @@
 # Desktop App with Face Authentication
 
-This repository presents my univercity coursework on theme: _**Creating a Person Identification Application**_.
+Available languages: [**English**✅](README.md), [Russian](README_ru.md)
+
+This repository presents my univercity coursework on theme:
+
+***Creating a Person Identification Application***
 
 # Contents
 
@@ -52,8 +56,8 @@ Each window has its own class and file, therefore, all methods implemented in th
 Also, the user interface and the implementation of the methods of each window were divided into different classes and files to improve the readability of the code.
 
 List of application windows:
-* **[Account login window](#account-login-window)** – a window for entering a username and password (or face identification).
-* **[Account registration window](#account-registration-window)** – a window for creating a new account in the system.
+* **[Account login window](#account-login-window)** – a window for entering a username and password (or face identification)
+* **[Account registration window](#account-registration-window)** – a window for creating a new account in the system
 * **[Main application window](#main-application-window)** – application window for system navigation (profile view, application settings, etc.)
 
 ## Account login window
@@ -65,10 +69,10 @@ List of application windows:
 Available interface elements:
 * Text field – initial value = “Hello!”, then it will be used to inform the user about errors
 * _login_ field – user login input
-* _password_ field – enter a user password
+* _password_ field – user password input
 * _Remember me_ checkbox – when clicked, the application remembers the user and will not ask for re-authorization after closing
 * _Sign In_ button – performs the user authorization procedure in the system using a password or face identification (if this option was enabled during registration or in the settings)
-* _Sign Up_ button – opens the registration window in the system
+* _Sign Up_ button – opens the [registration window](#account-registration-window) in the system
 
 ## Account registration window
 
@@ -79,15 +83,15 @@ Available interface elements:
 
 Available interface elements:
 * **Required** fields for registration:
-    * _name_ field – enter the name of user
-    * _login_ field – entering the user's login in the system
-    * _password_ field – entering the user's password in the system
+    * _name_ field – user real name input
+    * _login_ field – user login input
+    * _password_ field – user password input
 * **Optional** fields for registration:
-    * _surname_ field – entering the user's last name
-    * _email_ field – enter the user's email address
-* _Upload_ button – a button for uploading a photo to create a face layout and subsequent authentication using it. Immediately after selecting a photo, it is scanned for the presence of any face. If the face was not found, an error is displayed in the text field.
-* _Sign Up_ button – performs the user registration procedure in the system and returns the user to the authorization window
-* _Back_ button – returns the user to the authorization window without registering a new account
+    * _surname_ field – user surname input
+    * _email_ field – user email input
+* _Upload_ button – a button for uploading a photo to create a face layout and subsequent authentication using it. Immediately after selecting a photo, it is scanned for the presence of any face. If the face was not found, an error is displayed in the text field
+* _Sign Up_ button – performs the user registration procedure in the system and returns the user to the [authorization window](#account-login-window)
+* _Back_ button – returns the user to the [authorization window](#account-login-window) without registering a new account
 
 ## Main application window
 ### Main menu
@@ -99,11 +103,11 @@ Available interface elements:
 This window consists of two parts:
 1. Slide menu for navigation. There are 3 states available:
    * completely closed
-   * only page icons are shown (shown in the large screenshot, it is by default)
+   * only page icons are shown (shown in screenshot, it is by default)
    * expanded, both icons and names of available pages are visible
 
 2. Main page of the application, where you can see how face recognition works by uploading a photo. 
-After the algorithm completes, a photo with a highlighted face or faces will appear on the main screen.
+After the algorithm completes, a photo with a highlighted face or faces will appear on the main screen
 
 <p align="center">
 <img height="520" src="artefacts/mainmenuuploaded.png" width="500" alt="Main menu with uploaded image window"/>
@@ -112,10 +116,10 @@ After the algorithm completes, a photo with a highlighted face or faces will app
 Available interface elements:
 
 Slide menu:
-* _Profile_ button – opens the user profile menu in the system
-* _Settings_ button – opens the application settings menu
+* _Profile_ button – opens the user [profile menu](#profile-menu) in the system
+* _Settings_ button – opens the application [settings menu](#settings-menu)
 * _About_ button – opens the interface with a link to the project's GitHub repository
-* _Close_ button – closes the exit menu
+* _Close_ button – closes the slide menu
 
 The main page of the application:
 * _Upload_ button – upload a photo to demonstrate the operation of the facial recognition algorithm using a neural network.
@@ -128,12 +132,12 @@ The main page of the application:
 </p>
 
 Available interface elements:
-* Fields _name_, _surname_, _email_, _login_ – fields for displaying information entered by the user during registration.
-* _Change password_ button – shows the user the fields for entering a new password.
+* Fields _name_, _surname_, _email_, _login_ – fields for displaying information entered by the user during registration
+* _Change password_ button – shows the user the fields for entering a new password
 * _Save_ button – saves data to the database if something has been changed
 * _User avatar_ image – displays the uploaded image, when clicked opens a window for selecting a new image
 * _Exit_ button – exits the user's account in the system and closes the application
-* _Back_ button – returns the user to the main screen of the application
+* _Back_ button – returns the user to the [main screen](#main-menu) of the application
 
 ### Settings menu
 
@@ -147,7 +151,7 @@ the Upload button opens to upload a photo with the user's face.
 If everything went without errors, a message is displayed about the successful connection of the function. 
 Otherwise, an error message will be displayed and the user will not be able to press _Back_ button to return 
 to main menu. In this case, the user must either upload another photo or turn off the setting
-* _Back_ button – returns the user to the main screen of the application
+* _Back_ button – returns the user to the [main screen](#main-menu) of the application
 
 # Testing
 
@@ -181,11 +185,11 @@ chosen due to its high accuracy rates. Moreover, during the work, it was possibl
 implement the selected model into the user interface of the designed application, thereby greatly
 simplifying the authentication procedure in the application system.
 
-This README.md is an abbreviated version of the explanatory note for the course project. 
+This README file is an abbreviated version of the explanatory note for the course project. 
 The full version will be uploaded **later**.
 
 # References
 
-1. F. Schroff, D. Kalenichenko, J. Philbin. FaceNet: A Unified Embedding for Face Recognition and Clustering.
+1. F. Schroff, D. Kalenichenko, J. Philbin. FaceNet: A Unified Embedding for Face Recognition and Clustering : 
 [here](https://arxiv.org/abs/1503.03832)
-2. Facenet-pytorch repo: [here](https://github.com/timesler/facenet-pytorch)
+2. Facenet-pytorch repo : [here](https://github.com/timesler/facenet-pytorch)
